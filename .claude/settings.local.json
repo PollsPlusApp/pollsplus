@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/rileysmith/**)",
+      "Bash(brew list:*)",
+      "Bash(npm --version)",
+      "Bash(export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\")",
+      "Bash(npm install:*)",
+      "Bash(psql --version)",
+      "Bash(brew install:*)",
+      "Bash(export PATH=\"/opt/homebrew/opt/libpq/bin:/opt/homebrew/bin:/usr/local/bin:$PATH\")",
+      "Bash(psql \"postgresql://postgres:WrYLPriByOKcbdCFsMRlsRgqoWiVVhsc@maglev.proxy.rlwy.net:58334/railway\" -f \"/Users/rileysmith/Desktop/untitled folder/backend/src/db/schema.sql\")",
+      "Bash(node --test tests/api.test.js)",
+      "Bash(kill 44230)",
+      "Bash(railway --version)"
+    ]
+  }
+}
