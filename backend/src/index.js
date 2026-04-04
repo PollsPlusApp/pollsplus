@@ -26,31 +26,23 @@ app.get('/health', (req, res) => {
 // Debug endpoint — check DB connection and tables (REMOVE BEFORE PRODUCTION)
 app.get('/debug/db', async (req, res) => {
   const pool = require('./db/pool');
+  const envInfo = {
+    DATABASE_URL: (process.env.DATABASE_URL || 'NOT SET').replace(/:([^@]+)@/, ':***@'),
+    DATABASE_PUBLIC_URL: (process.env.DATABASE_PUBLIC_URL || 'NOT SET').replace(/:([^@]+)@/, ':***@'),
+    PGHOST: process.env.PGHOST || 'NOT SET',
+    PGPORT: process.env.PGPORT || 'NOT SET',
+    PGUSER: process.env.PGUSER || 'NOT SET',
+    PGDATABASE: process.env.PGDATABASE || 'NOT SET',
+    PGPASSWORD: process.env.PGPASSWORD ? 'SET' : 'NOT SET',
+    NODE_ENV: process.env.NODE_ENV || 'NOT SET',
+  };
   try {
     const tables = await pool.query(
       "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name"
     );
-    const publicUrl = process.env.DATABASE_PUBLIC_URL || 'NOT SET';
-    const internalUrl = process.env.DATABASE_URL || 'NOT SET';
-    res.json({
-      connected: true,
-      using: publicUrl !== 'NOT SET' ? 'DATABASE_PUBLIC_URL' : 'DATABASE_URL',
-      database_public_url: publicUrl.replace(/:([^@]+)@/, ':***@'),
-      database_url: internalUrl.replace(/:([^@]+)@/, ':***@'),
-      node_env: process.env.NODE_ENV || 'NOT SET',
-      tables: tables.rows.map(r => r.table_name),
-    });
+    res.json({ connected: true, env: envInfo, tables: tables.rows.map(r => r.table_name) });
   } catch (err) {
-    const publicUrl = process.env.DATABASE_PUBLIC_URL || 'NOT SET';
-    const internalUrl = process.env.DATABASE_URL || 'NOT SET';
-    res.json({
-      connected: false,
-      error: err.message,
-      using: publicUrl !== 'NOT SET' ? 'DATABASE_PUBLIC_URL' : 'DATABASE_URL',
-      database_public_url: publicUrl.replace(/:([^@]+)@/, ':***@'),
-      database_url: internalUrl.replace(/:([^@]+)@/, ':***@'),
-      node_env: process.env.NODE_ENV || 'NOT SET',
-    });
+    res.json({ connected: false, error: err.message, env: envInfo });
   }
 });
 
