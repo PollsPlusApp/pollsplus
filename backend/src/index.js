@@ -23,6 +23,31 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Debug endpoint — check DB connection and tables (REMOVE BEFORE PRODUCTION)
+app.get('/debug/db', async (req, res) => {
+  const pool = require('./db/pool');
+  try {
+    const tables = await pool.query(
+      "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name"
+    );
+    const dbUrl = process.env.DATABASE_URL || 'NOT SET';
+    const masked = dbUrl.replace(/:([^@]+)@/, ':***@');
+    res.json({
+      connected: true,
+      database_url: masked,
+      node_env: process.env.NODE_ENV || 'NOT SET',
+      tables: tables.rows.map(r => r.table_name),
+    });
+  } catch (err) {
+    res.json({
+      connected: false,
+      error: err.message,
+      database_url: (process.env.DATABASE_URL || 'NOT SET').replace(/:([^@]+)@/, ':***@'),
+      node_env: process.env.NODE_ENV || 'NOT SET',
+    });
+  }
+});
+
 // Routes
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/users', userRoutes);
