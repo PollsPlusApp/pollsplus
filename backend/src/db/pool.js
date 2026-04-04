@@ -1,11 +1,13 @@
 const { Pool } = require('pg');
 
+const connectionString = process.env.DATABASE_PUBLIC_URL || process.env.DATABASE_URL;
+
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString,
   max: 10,
   idleTimeoutMillis: 20000,
   connectionTimeoutMillis: 10000,
-  ssl: false,
+  ssl: { rejectUnauthorized: false },
 });
 
 pool.on('error', (err) => {

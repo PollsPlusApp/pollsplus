@@ -30,19 +30,25 @@ app.get('/debug/db', async (req, res) => {
     const tables = await pool.query(
       "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name"
     );
-    const dbUrl = process.env.DATABASE_URL || 'NOT SET';
-    const masked = dbUrl.replace(/:([^@]+)@/, ':***@');
+    const publicUrl = process.env.DATABASE_PUBLIC_URL || 'NOT SET';
+    const internalUrl = process.env.DATABASE_URL || 'NOT SET';
     res.json({
       connected: true,
-      database_url: masked,
+      using: publicUrl !== 'NOT SET' ? 'DATABASE_PUBLIC_URL' : 'DATABASE_URL',
+      database_public_url: publicUrl.replace(/:([^@]+)@/, ':***@'),
+      database_url: internalUrl.replace(/:([^@]+)@/, ':***@'),
       node_env: process.env.NODE_ENV || 'NOT SET',
       tables: tables.rows.map(r => r.table_name),
     });
   } catch (err) {
+    const publicUrl = process.env.DATABASE_PUBLIC_URL || 'NOT SET';
+    const internalUrl = process.env.DATABASE_URL || 'NOT SET';
     res.json({
       connected: false,
       error: err.message,
-      database_url: (process.env.DATABASE_URL || 'NOT SET').replace(/:([^@]+)@/, ':***@'),
+      using: publicUrl !== 'NOT SET' ? 'DATABASE_PUBLIC_URL' : 'DATABASE_URL',
+      database_public_url: publicUrl.replace(/:([^@]+)@/, ':***@'),
+      database_url: internalUrl.replace(/:([^@]+)@/, ':***@'),
       node_env: process.env.NODE_ENV || 'NOT SET',
     });
   }
