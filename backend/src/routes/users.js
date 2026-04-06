@@ -1,9 +1,83 @@
 const express = require('express');
 const pool = require('../db/pool');
 const authenticate = require('../middleware/auth');
-const { parsePagination } = require('../utils/helpers');
+const { parsePagination, isValidCategory } = require('../utils/helpers');
 
 const router = express.Router();
+
+// GET /api/users/me/voted — Get debates the current user voted on
+router.get('/me/voted', authenticate, async (req, res) => {
+  try {
+    const { limit, offset } = parsePagination(req.query);
+
+    const result = await pool.query(
+      `SELECT d.id, d.title, d.category, d.community_id, d.created_at,
+        u.id AS author_id, u.username AS author_username, u.category AS author_category,
+        (SELECT COALESCE(json_agg(json_build_object(
+          'id', o.id, 'label', o.label, 'position', o.position,
+          'vote_count', (SELECT COUNT(*) FROM votes v2 WHERE v2.option_id = o.id)::int
+        ) ORDER BY o.position), '[]') FROM debate_options o WHERE o.debate_id = d.id) AS options,
+        (SELECT COUNT(*) FROM votes v2 WHERE v2.debate_id = d.id)::int AS total_votes,
+        (SELECT option_id FROM votes v2 WHERE v2.user_id = $1 AND v2.debate_id = d.id) AS my_vote_option_id
+      FROM votes v
+      JOIN debates d ON v.debate_id = d.id
+      JOIN users u ON d.user_id = u.id
+      WHERE v.user_id = $1
+        AND NOT EXISTS (SELECT 1 FROM blocks WHERE (blocker_id = $1 AND blocked_id = d.user_id) OR (blocker_id = d.user_id AND blocked_id = $1))
+      ORDER BY v.created_at DESC
+      LIMIT $2 OFFSET $3`,
+      [req.userId, limit, offset]
+    );
+
+    res.json({ debates: result.rows });
+  } catch (err) {
+    console.error('Get voted debates error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// GET /api/users/me/communities — Get communities the current user is a member of
+router.get('/me/communities', authenticate, async (req, res) => {
+  try {
+    const { limit, offset } = parsePagination(req.query);
+
+    const result = await pool.query(
+      `SELECT c.*,
+        u.username AS founder_username,
+        (SELECT COUNT(*) FROM community_members WHERE community_id = c.id AND status = 'member')::int AS member_count,
+        true AS is_member,
+        (c.founder_id = $1) AS is_founder
+      FROM community_members cm
+      JOIN communities c ON cm.community_id = c.id
+      JOIN users u ON c.founder_id = u.id
+      WHERE cm.user_id = $1 AND cm.status = 'member'
+      ORDER BY cm.joined_at DESC
+      LIMIT $2 OFFSET $3`,
+      [req.userId, limit, offset]
+    );
+
+    res.json({ communities: result.rows });
+  } catch (err) {
+    console.error('Get my communities error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// PUT /api/users/me/category — Update current user's category
+router.put('/me/category', authenticate, async (req, res) => {
+  try {
+    const { category } = req.body;
+    if (!category || !isValidCategory(category)) {
+      return res.status(400).json({ error: 'Valid category is required' });
+    }
+
+    await pool.query('UPDATE users SET category = $1, updated_at = NOW() WHERE id = $2', [category, req.userId]);
+    res.json({ success: true, category });
+  } catch (err) {
+    console.error('Update category error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 
 // GET /api/users/:id — Get user profile
 router.get('/:id', authenticate, async (req, res) => {

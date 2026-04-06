@@ -12,7 +12,25 @@
       "Bash(psql \"postgresql://postgres:WrYLPriByOKcbdCFsMRlsRgqoWiVVhsc@maglev.proxy.rlwy.net:58334/railway\" -f \"/Users/rileysmith/Desktop/untitled folder/backend/src/db/schema.sql\")",
       "Bash(node --test tests/api.test.js)",
       "Bash(kill 44230)",
-      "Bash(railway --version)"
+      "Bash(railway --version)",
+      "Bash(curl -s https://pollsplus-production.up.railway.app/health)",
+      "Bash(curl -s -X POST https://pollsplus-production.up.railway.app/api/auth/register -H \"Content-Type: application/json\" -d '{\"\"username\"\":\"\"testuser99\"\",\"\"email\"\":\"\"testuser99@test.com\"\",\"\"password\"\":\"\"password123\"\",\"\"category\"\":\"\"General\"\"}')",
+      "Bash(curl -s -v -X POST https://pollsplus-production.up.railway.app/api/auth/register -H \"Content-Type: application/json\" -d '{\"\"\"\"username\"\"\"\":\"\"\"\"testuser99\"\"\"\",\"\"\"\"email\"\"\"\":\"\"\"\"testuser99@test.com\"\"\"\",\"\"\"\"password\"\"\"\":\"\"\"\"password123\"\"\"\",\"\"\"\"category\"\"\"\":\"\"\"\"General\"\"\"\"}')",
+      "Bash(psql \"postgresql://postgres:WrYLPriByOKcbdCFsMRlsRgqoWiVVhsc@maglev.proxy.rlwy.net:58334/railway\" -c \"SELECT id, username FROM users LIMIT 5;\")",
+      "Bash(psql \"postgresql://postgres:WrYLPriByOKcbdCFsMRlsRgqoWiVVhsc@maglev.proxy.rlwy.net:58334/railway?sslmode=disable\" -c \"SELECT id, username FROM users LIMIT 5;\")",
+      "Bash(curl -s -w \"\\\\nHTTP_STATUS: %{http_code}\" -X POST https://pollsplus-production.up.railway.app/api/auth/register -H \"Content-Type: application/json\" -d '{\"\"username\"\":\"\"debugtest1\"\",\"\"email\"\":\"\"debugtest1@test.com\"\",\"\"password\"\":\"\"password123\"\",\"\"category\"\":\"\"General\"\"}')",
+      "Bash(PGPASSWORD=WrYLPriByOKcbdCFsMRlsRgqoWiVVhsc psql -h maglev.proxy.rlwy.net -p 58334 -U postgres -d railway -c \"\\\\dt\")",
+      "Bash(PGPASSWORD=WrYLPriByOKcbdCFsMRlsRgqoWiVVhsc PGSSLMODE=disable psql -h maglev.proxy.rlwy.net -p 58334 -U postgres -d railway -c \"\\\\dt\")",
+      "Bash(node -e \":*)",
+      "Bash(curl -s https://pollsplus-production.up.railway.app/debug/db)",
+      "Bash(node -e \"console.log\\(encodeURIComponent\\(''MZp/MARy_vu@8fN''\\)\\)\")",
+      "Bash(kill %1)",
+      "Bash(dig +short db.ukmimprgjhpaprorbetc.supabase.co)",
+      "Bash(nslookup db.ukmimprgjhpaprorbetc.supabase.co)",
+      "WebSearch",
+      "Bash(DATABASE_URL=\"postgresql://postgres.ukmimprgjhpaprorbetc:MZp%2FMARy_vu%408fN@aws-1-us-west-2.pooler.supabase.com:5432/postgres\" node src/seed.js)",
+      "Bash(DATABASE_URL=\"postgresql://postgres.ukmimprgjhpaprorbetc:MZp%2FMARy_vu%408fN@aws-1-us-west-2.pooler.supabase.com:5432/postgres\" node -e \":*)",
+      "Bash(DATABASE_URL=\"postgresql://postgres.ukmimprgjhpaprorbetc:MZp%2FMARy_vu%408fN@aws-1-us-west-2.pooler.supabase.com:5432/postgres\" node src/seed-clean.js)"
     ]
   }
 }
