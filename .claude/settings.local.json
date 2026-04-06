@@ -30,7 +30,8 @@
       "WebSearch",
       "Bash(DATABASE_URL=\"postgresql://postgres.ukmimprgjhpaprorbetc:MZp%2FMARy_vu%408fN@aws-1-us-west-2.pooler.supabase.com:5432/postgres\" node src/seed.js)",
       "Bash(DATABASE_URL=\"postgresql://postgres.ukmimprgjhpaprorbetc:MZp%2FMARy_vu%408fN@aws-1-us-west-2.pooler.supabase.com:5432/postgres\" node -e \":*)",
-      "Bash(DATABASE_URL=\"postgresql://postgres.ukmimprgjhpaprorbetc:MZp%2FMARy_vu%408fN@aws-1-us-west-2.pooler.supabase.com:5432/postgres\" node src/seed-clean.js)"
+      "Bash(DATABASE_URL=\"postgresql://postgres.ukmimprgjhpaprorbetc:MZp%2FMARy_vu%408fN@aws-1-us-west-2.pooler.supabase.com:5432/postgres\" node src/seed-clean.js)",
+      "Bash(curl -s -X POST https://pollsplus-production.up.railway.app/api/auth/register -H \"Content-Type: application/json\" -d '{\"\"\"\"username\"\"\"\":\"\"\"\"routetest\"\"\"\",\"\"\"\"email\"\"\"\":\"\"\"\"routetest@test.com\"\"\"\",\"\"\"\"password\"\"\"\":\"\"\"\"test123456\"\"\"\",\"\"\"\"category\"\"\"\":\"\"\"\"Sports\"\"\"\"}')"
     ]
   }
 }
