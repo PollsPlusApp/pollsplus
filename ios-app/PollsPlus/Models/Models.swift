@@ -35,36 +35,67 @@ struct Debate: Codable, Identifiable {
     let category: String
     let communityId: Int?
     let createdAt: String
+    let expiresAt: String?
     let authorId: Int
     let authorUsername: String
     let authorCategory: String
     let options: [DebateOption]
     let totalVotes: Int
     let myVoteOptionId: Int?
+    let myVoteCreatedAt: String?
+    let isPinned: Bool?
 
     enum CodingKeys: String, CodingKey {
         case id, title, category, options
         case communityId = "community_id"
         case createdAt = "created_at"
+        case expiresAt = "expires_at"
         case authorId = "author_id"
         case authorUsername = "author_username"
         case authorCategory = "author_category"
         case totalVotes = "total_votes"
         case myVoteOptionId = "my_vote_option_id"
+        case myVoteCreatedAt = "my_vote_created_at"
+        case isPinned = "is_pinned"
     }
 
     var hasVoted: Bool { myVoteOptionId != nil }
 
+    var isExpired: Bool {
+        guard let expiresAt = expiresAt else { return false }
+        return parseDate(expiresAt)?.compare(Date()) == .orderedAscending
+    }
+
+    var votingOpen: Bool { !isExpired }
+
+    var expiryDisplay: String? {
+        guard let expiresAt = expiresAt, let date = parseDate(expiresAt) else { return nil }
+        if isExpired { return "Voting closed" }
+        let remaining = date.timeIntervalSince(Date())
+        if remaining < 3600 { return "Closes in \(Int(remaining / 60))m" }
+        if remaining < 86400 { return "Closes in \(Int(remaining / 3600))h" }
+        return "Closes in \(Int(remaining / 86400))d"
+    }
+
+    var voteTimestampDisplay: String? {
+        guard let ts = myVoteCreatedAt, let date = parseDate(ts) else { return nil }
+        let fmt = DateFormatter()
+        fmt.dateStyle = .medium
+        fmt.timeStyle = .short
+        return "Voted \(fmt.string(from: date))"
+    }
+
     var timeAgo: String {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        guard let date = formatter.date(from: createdAt) else {
-            // Try without fractional seconds
-            formatter.formatOptions = [.withInternetDateTime]
-            guard let date = formatter.date(from: createdAt) else { return "" }
-            return date.timeAgoDisplay()
-        }
+        guard let date = parseDate(createdAt) else { return "" }
         return date.timeAgoDisplay()
+    }
+
+    private func parseDate(_ str: String) -> Date? {
+        let f = ISO8601DateFormatter()
+        f.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        if let d = f.date(from: str) { return d }
+        f.formatOptions = [.withInternetDateTime]
+        return f.date(from: str)
     }
 }
 
@@ -94,10 +125,12 @@ struct CreateDebateRequest: Codable {
     let category: String
     let options: [String]
     let communityId: Int?
+    let expiresAt: String?
 
     enum CodingKeys: String, CodingKey {
         case title, category, options
         case communityId = "community_id"
+        case expiresAt = "expires_at"
     }
 }
 

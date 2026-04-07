@@ -8,7 +8,7 @@ const router = express.Router();
 // POST /api/debates — Create debate
 router.post('/', authenticate, async (req, res) => {
   try {
-    const { title, category, options, community_id } = req.body;
+    const { title, category, options, community_id, expires_at } = req.body;
 
     if (!category || !isValidCategory(category)) {
       return res.status(400).json({ error: 'Valid category is required' });
@@ -20,7 +20,16 @@ router.post('/', authenticate, async (req, res) => {
       return res.status(400).json({ error: 'All options must be non-empty strings' });
     }
 
-    // If posting to a community, verify membership
+    // Validate expires_at if provided
+    let expiresAtValue = null;
+    if (expires_at) {
+      const d = new Date(expires_at);
+      if (isNaN(d.getTime()) || d <= new Date()) {
+        return res.status(400).json({ error: 'Expiry date must be in the future' });
+      }
+      expiresAtValue = d.toISOString();
+    }
+
     if (community_id) {
       const membership = await pool.query(
         "SELECT 1 FROM community_members WHERE community_id = $1 AND user_id = $2 AND status = 'member'",
@@ -36,8 +45,8 @@ router.post('/', authenticate, async (req, res) => {
       await client.query('BEGIN');
 
       const debateResult = await client.query(
-        'INSERT INTO debates (user_id, community_id, title, category) VALUES ($1, $2, $3, $4) RETURNING *',
-        [req.userId, community_id || null, title || null, category]
+        'INSERT INTO debates (user_id, community_id, title, category, expires_at) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+        [req.userId, community_id || null, title || null, category, expiresAtValue]
       );
       const debate = debateResult.rows[0];
 
@@ -54,6 +63,8 @@ router.post('/', authenticate, async (req, res) => {
         options: optionResult.rows.map(o => ({ ...o, vote_count: 0 })),
         total_votes: 0,
         my_vote_option_id: null,
+        my_vote_created_at: null,
+        is_pinned: false,
       });
     } catch (err) {
       await client.query('ROLLBACK');
@@ -67,21 +78,27 @@ router.post('/', authenticate, async (req, res) => {
   }
 });
 
+// Shared debate SELECT with vote timestamp and pin status
+const DEBATE_FIELDS = `
+  SELECT d.id, d.title, d.category, d.community_id, d.created_at, d.expires_at,
+    u.id AS author_id, u.username AS author_username, u.category AS author_category,
+    (SELECT COALESCE(json_agg(json_build_object(
+      'id', o.id, 'label', o.label, 'position', o.position,
+      'vote_count', (SELECT COUNT(*) FROM votes v WHERE v.option_id = o.id)::int
+    ) ORDER BY o.position), '[]') FROM debate_options o WHERE o.debate_id = d.id) AS options,
+    (SELECT COUNT(*) FROM votes v WHERE v.debate_id = d.id)::int AS total_votes,
+    (SELECT option_id FROM votes v WHERE v.user_id = $2 AND v.debate_id = d.id) AS my_vote_option_id,
+    (SELECT created_at FROM votes v WHERE v.user_id = $2 AND v.debate_id = d.id) AS my_vote_created_at,
+    EXISTS(SELECT 1 FROM pins WHERE user_id = $2 AND debate_id = d.id) AS is_pinned
+  FROM debates d
+  JOIN users u ON d.user_id = u.id
+`;
+
 // GET /api/debates/:id — Get single debate
 router.get('/:id', authenticate, async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT d.id, d.title, d.category, d.community_id, d.created_at,
-        u.id AS author_id, u.username AS author_username, u.category AS author_category,
-        (SELECT COALESCE(json_agg(json_build_object(
-          'id', o.id, 'label', o.label, 'position', o.position,
-          'vote_count', (SELECT COUNT(*) FROM votes v WHERE v.option_id = o.id)::int
-        ) ORDER BY o.position), '[]') FROM debate_options o WHERE o.debate_id = d.id) AS options,
-        (SELECT COUNT(*) FROM votes v WHERE v.debate_id = d.id)::int AS total_votes,
-        (SELECT option_id FROM votes v WHERE v.user_id = $2 AND v.debate_id = d.id) AS my_vote_option_id
-      FROM debates d
-      JOIN users u ON d.user_id = u.id
-      WHERE d.id = $1`,
+      `${DEBATE_FIELDS} WHERE d.id = $1`,
       [req.params.id, req.userId]
     );
 
@@ -107,7 +124,6 @@ router.delete('/:id', authenticate, async (req, res) => {
     const d = debate.rows[0];
     let authorized = d.user_id === req.userId;
 
-    // Also allow community founder to delete
     if (!authorized && d.community_id) {
       const community = await pool.query('SELECT founder_id FROM communities WHERE id = $1', [d.community_id]);
       if (community.rows.length > 0 && community.rows[0].founder_id === req.userId) {
@@ -135,7 +151,15 @@ router.post('/:id/vote', authenticate, async (req, res) => {
       return res.status(400).json({ error: 'option_id is required' });
     }
 
-    // Verify option belongs to this debate
+    // Check if debate is expired
+    const debate = await pool.query('SELECT expires_at FROM debates WHERE id = $1', [req.params.id]);
+    if (debate.rows.length === 0) {
+      return res.status(404).json({ error: 'Debate not found' });
+    }
+    if (debate.rows[0].expires_at && new Date(debate.rows[0].expires_at) <= new Date()) {
+      return res.status(403).json({ error: 'Voting has ended for this debate' });
+    }
+
     const option = await pool.query(
       'SELECT id FROM debate_options WHERE id = $1 AND debate_id = $2',
       [option_id, req.params.id]
@@ -149,7 +173,6 @@ router.post('/:id/vote', authenticate, async (req, res) => {
       [req.userId, req.params.id, option_id]
     );
 
-    // Also mark as seen
     await pool.query(
       'INSERT INTO seen_posts (user_id, debate_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
       [req.userId, req.params.id]
@@ -180,6 +203,48 @@ router.delete('/:id/vote', authenticate, async (req, res) => {
     res.json({ success: true });
   } catch (err) {
     console.error('Delete vote error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// POST /api/debates/:id/pin — Pin a debate
+router.post('/:id/pin', authenticate, async (req, res) => {
+  try {
+    const debateId = parseInt(req.params.id);
+    const debate = await pool.query('SELECT user_id FROM debates WHERE id = $1', [debateId]);
+    if (debate.rows.length === 0) {
+      return res.status(404).json({ error: 'Debate not found' });
+    }
+
+    // Determine pin type: creator or voter
+    const isCreator = debate.rows[0].user_id === req.userId;
+    const hasVoted = await pool.query('SELECT 1 FROM votes WHERE user_id = $1 AND debate_id = $2', [req.userId, debateId]);
+
+    if (!isCreator && hasVoted.rows.length === 0) {
+      return res.status(403).json({ error: 'You must be the creator or have voted to pin this debate' });
+    }
+
+    const pinType = isCreator ? 'created' : 'voted';
+
+    await pool.query(
+      'INSERT INTO pins (user_id, debate_id, pin_type) VALUES ($1, $2, $3) ON CONFLICT (user_id, debate_id) DO NOTHING',
+      [req.userId, debateId, pinType]
+    );
+
+    res.json({ success: true, pin_type: pinType });
+  } catch (err) {
+    console.error('Pin error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// DELETE /api/debates/:id/pin — Unpin a debate
+router.delete('/:id/pin', authenticate, async (req, res) => {
+  try {
+    await pool.query('DELETE FROM pins WHERE user_id = $1 AND debate_id = $2', [req.userId, parseInt(req.params.id)]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Unpin error:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });

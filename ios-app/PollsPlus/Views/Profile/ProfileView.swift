@@ -159,8 +159,11 @@ struct ProfileView: View {
             ProfileTabButton(title: "Voted", isSelected: selectedProfileTab == 1) {
                 selectedProfileTab = 1
             }
-            ProfileTabButton(title: "Communities", isSelected: selectedProfileTab == 2) {
+            ProfileTabButton(title: "Pinned", isSelected: selectedProfileTab == 2) {
                 selectedProfileTab = 2
+            }
+            ProfileTabButton(title: "Communities", isSelected: selectedProfileTab == 3) {
+                selectedProfileTab = 3
             }
         }
         .padding(.horizontal)
@@ -173,6 +176,8 @@ struct ProfileView: View {
         case 1:
             DebateListView(feedType: .votedDebates)
         case 2:
+            DebateListView(feedType: .pinnedDebates)
+        case 3:
             MyCommunitiesListView()
         default:
             DebateListView(feedType: .userDebates(userId))

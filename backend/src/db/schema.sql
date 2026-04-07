@@ -63,6 +63,7 @@ CREATE TABLE debates (
     community_id INTEGER REFERENCES communities(id) ON DELETE CASCADE,
     title VARCHAR(300),
     category category_enum NOT NULL,
+    expires_at TIMESTAMPTZ DEFAULT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -173,3 +174,18 @@ CREATE TABLE notifications (
 
 CREATE INDEX idx_notifications_user ON notifications (user_id, created_at DESC);
 CREATE INDEX idx_notifications_unread ON notifications (user_id, read) WHERE read = false;
+
+-- ============================================
+-- PINS
+-- ============================================
+CREATE TABLE pins (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    debate_id INTEGER NOT NULL REFERENCES debates(id) ON DELETE CASCADE,
+    pin_type VARCHAR(20) NOT NULL CHECK (pin_type IN ('voted', 'created')),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE(user_id, debate_id)
+);
+
+CREATE INDEX idx_pins_user ON pins (user_id);
+CREATE INDEX idx_pins_user_type ON pins (user_id, pin_type);

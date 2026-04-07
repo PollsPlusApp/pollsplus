@@ -5,6 +5,7 @@ enum FeedType: Hashable {
     case userDebates(Int)
     case communityDebates(Int)
     case votedDebates
+    case pinnedDebates
 }
 
 struct DebateListView: View {
@@ -96,7 +97,13 @@ struct DebateListView: View {
             },
             onDelete: (showDeleteForOwnDebates || debate.authorId == network.currentUserId) ? {
                 Task { await deleteDebate(debate: debate, index: index) }
-            } : nil
+            } : nil,
+            onPin: {
+                Task { await pinDebate(debate: debate, index: index) }
+            },
+            onUnpin: {
+                Task { await unpinDebate(debate: debate, index: index) }
+            }
         )
         .padding(.horizontal)
         .onAppear {
@@ -153,6 +160,7 @@ struct DebateListView: View {
         case .userDebates(let userId): return try await network.getUserDebates(id: userId, page: page)
         case .communityDebates(let communityId): return try await network.getCommunityDebates(id: communityId, page: page)
         case .votedDebates: return try await network.getVotedDebates(page: page)
+        case .pinnedDebates: return try await network.getPinnedDebates(page: page)
         }
     }
 
@@ -175,6 +183,22 @@ struct DebateListView: View {
             if index < debates.count {
                 debates[index] = updated
             }
+        } catch {}
+    }
+
+    private func pinDebate(debate: Debate, index: Int) async {
+        do {
+            try await network.pinDebate(debateId: debate.id)
+            let updated = try await network.getDebate(id: debate.id)
+            if index < debates.count { debates[index] = updated }
+        } catch {}
+    }
+
+    private func unpinDebate(debate: Debate, index: Int) async {
+        do {
+            try await network.unpinDebate(debateId: debate.id)
+            let updated = try await network.getDebate(id: debate.id)
+            if index < debates.count { debates[index] = updated }
         } catch {}
     }
 

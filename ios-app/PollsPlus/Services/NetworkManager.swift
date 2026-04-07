@@ -165,6 +165,10 @@ class NetworkManager: ObservableObject {
         try await request("GET", path: "/api/users/me/voted?page=\(page)")
     }
 
+    func getPinnedDebates(page: Int = 1) async throws -> DebatesResponse {
+        try await request("GET", path: "/api/users/me/pinned?page=\(page)")
+    }
+
     func getMyCommunities(page: Int = 1) async throws -> CommunitiesResponse {
         try await request("GET", path: "/api/users/me/communities?page=\(page)")
     }
@@ -175,9 +179,9 @@ class NetworkManager: ObservableObject {
     }
 
     // MARK: - Debates
-    func createDebate(title: String?, category: String, options: [String], communityId: Int? = nil) async throws -> Debate {
+    func createDebate(title: String?, category: String, options: [String], communityId: Int? = nil, expiresAt: String? = nil) async throws -> Debate {
         try await request("POST", path: "/api/debates",
-            body: CreateDebateRequest(title: title, category: category, options: options, communityId: communityId))
+            body: CreateDebateRequest(title: title, category: category, options: options, communityId: communityId, expiresAt: expiresAt))
     }
 
     func getDebate(id: Int) async throws -> Debate {
@@ -195,6 +199,14 @@ class NetworkManager: ObservableObject {
 
     func deleteVote(debateId: Int) async throws {
         try await requestNoResponse("DELETE", path: "/api/debates/\(debateId)/vote")
+    }
+
+    func pinDebate(debateId: Int) async throws {
+        try await requestNoResponse("POST", path: "/api/debates/\(debateId)/pin")
+    }
+
+    func unpinDebate(debateId: Int) async throws {
+        try await requestNoResponse("DELETE", path: "/api/debates/\(debateId)/pin")
     }
 
     func reportDebate(debateId: Int, reason: String) async throws {

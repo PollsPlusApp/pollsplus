@@ -13,6 +13,8 @@ struct CreateDebateView: View {
     @State private var isLoading = false
     @State private var error: String?
     @State private var showPostTo = false
+    @State private var hasDeadline = false
+    @State private var deadlineDate = Calendar.current.date(byAdding: .day, value: 1, to: Date()) ?? Date()
 
     var canSubmit: Bool {
         let validOptions = options.filter { !$0.trimmingCharacters(in: .whitespaces).isEmpty }
@@ -25,6 +27,7 @@ struct CreateDebateView: View {
                 VStack(spacing: 24) {
                     titleSection
                     optionsSection
+                    deadlineSection
                     errorSection
                     postToButton
                 }
@@ -115,6 +118,61 @@ struct CreateDebateView: View {
         }
     }
 
+    private var deadlineSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Voting Deadline")
+                .font(.subheadline.bold())
+                .foregroundStyle(.secondary)
+
+            HStack(spacing: 12) {
+                Button {
+                    hasDeadline = false
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "infinity")
+                            .font(.caption.bold())
+                        Text("Forever")
+                            .font(.subheadline.weight(.semibold))
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .background(!hasDeadline ? Color.green : Color(.systemGray6))
+                    .foregroundColor(!hasDeadline ? .white : .primary)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                }
+
+                Button {
+                    hasDeadline = true
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "clock.fill")
+                            .font(.caption.bold())
+                        Text("Set Deadline")
+                            .font(.subheadline.weight(.semibold))
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .background(hasDeadline ? Color.orange : Color(.systemGray6))
+                    .foregroundColor(hasDeadline ? .white : .primary)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                }
+            }
+
+            if hasDeadline {
+                DatePicker(
+                    "Voting ends",
+                    selection: $deadlineDate,
+                    in: Date()...,
+                    displayedComponents: [.date, .hourAndMinute]
+                )
+                .datePickerStyle(.compact)
+                .padding(12)
+                .background(Color(.systemGray6))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+        }
+    }
+
     @ViewBuilder
     private var errorSection: some View {
         if let error = error {
@@ -159,6 +217,13 @@ struct CreateDebateView: View {
 
     // MARK: - Submit Actions
 
+    private var expiryString: String? {
+        guard hasDeadline else { return nil }
+        let f = ISO8601DateFormatter()
+        f.formatOptions = [.withInternetDateTime]
+        return f.string(from: deadlineDate)
+    }
+
     private func submitToCategory(_ category: String) {
         showPostTo = false
         isLoading = true
@@ -170,7 +235,8 @@ struct CreateDebateView: View {
                     title: title.isEmpty ? nil : title,
                     category: category,
                     options: validOptions,
-                    communityId: nil
+                    communityId: nil,
+                    expiresAt: expiryString
                 )
                 dismiss()
             } catch {
@@ -191,7 +257,8 @@ struct CreateDebateView: View {
                     title: title.isEmpty ? nil : title,
                     category: category,
                     options: validOptions,
-                    communityId: communityId
+                    communityId: communityId,
+                    expiresAt: expiryString
                 )
                 dismiss()
             } catch {

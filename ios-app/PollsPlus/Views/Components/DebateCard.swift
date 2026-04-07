@@ -6,6 +6,8 @@ struct DebateCard: View {
     var onDeleteVote: (() -> Void)?
     var onTapAuthor: ((Int) -> Void)?
     var onDelete: (() -> Void)?
+    var onPin: (() -> Void)?
+    var onUnpin: (() -> Void)?
 
     private var catColor: Color { CategoryHelper.color(for: debate.category) }
 
@@ -13,6 +15,7 @@ struct DebateCard: View {
         VStack(alignment: .leading, spacing: 14) {
             cardHeader
             titleSection
+            expiryBanner
             optionsSection
             footerSection
         }
@@ -26,6 +29,9 @@ struct DebateCard: View {
             RoundedRectangle(cornerRadius: 18)
                 .stroke(catColor.opacity(0.12), lineWidth: 1)
         )
+        .overlay(alignment: .topTrailing) {
+            pinBadge
+        }
     }
 
     // MARK: - Header
@@ -53,16 +59,48 @@ struct DebateCard: View {
 
             Spacer()
 
-            if let onDelete = onDelete {
-                Menu {
-                    Button("Delete Debate", role: .destructive) { onDelete() }
-                } label: {
-                    Image(systemName: "ellipsis")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .frame(width: 30, height: 30)
+            cardMenu
+        }
+    }
+
+    @ViewBuilder
+    private var cardMenu: some View {
+        let hasActions = onDelete != nil || debate.hasVoted || debate.authorId == (NetworkManager.shared.currentUserId ?? -1)
+        if hasActions {
+            Menu {
+                if debate.hasVoted || debate.authorId == (NetworkManager.shared.currentUserId ?? -1) {
+                    if debate.isPinned == true {
+                        Button { onUnpin?() } label: {
+                            Label("Unpin", systemImage: "pin.slash")
+                        }
+                    } else {
+                        Button { onPin?() } label: {
+                            Label("Pin to Profile", systemImage: "pin.fill")
+                        }
+                    }
                 }
+                if let onDelete = onDelete {
+                    Button("Delete Debate", role: .destructive) { onDelete() }
+                }
+            } label: {
+                Image(systemName: "ellipsis")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .frame(width: 30, height: 30)
             }
+        }
+    }
+
+    @ViewBuilder
+    private var pinBadge: some View {
+        if debate.isPinned == true {
+            Image(systemName: "pin.fill")
+                .font(.caption2)
+                .foregroundColor(.white)
+                .padding(5)
+                .background(catColor)
+                .clipShape(Circle())
+                .offset(x: -8, y: 8)
         }
     }
 
@@ -76,12 +114,31 @@ struct DebateCard: View {
         }
     }
 
+    // MARK: - Expiry Banner
+
+    @ViewBuilder
+    private var expiryBanner: some View {
+        if let display = debate.expiryDisplay {
+            HStack(spacing: 5) {
+                Image(systemName: debate.isExpired ? "lock.fill" : "clock.fill")
+                    .font(.caption2)
+                Text(display)
+                    .font(.caption.bold())
+            }
+            .foregroundColor(debate.isExpired ? .red : .orange)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .background(debate.isExpired ? Color.red.opacity(0.1) : Color.orange.opacity(0.1))
+            .clipShape(Capsule())
+        }
+    }
+
     // MARK: - Options
 
     private var optionsSection: some View {
         VStack(spacing: 8) {
             ForEach(debate.options) { option in
-                if debate.hasVoted {
+                if debate.hasVoted || debate.isExpired {
                     VotedOptionRow(
                         option: option,
                         totalVotes: debate.totalVotes,
@@ -117,9 +174,15 @@ struct DebateCard: View {
                 .font(.caption.bold())
                 .foregroundStyle(catColor.opacity(0.7))
 
+            if let voteTime = debate.voteTimestampDisplay {
+                Text(voteTime)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+
             Spacer()
 
-            if debate.hasVoted {
+            if debate.hasVoted && debate.votingOpen {
                 Button {
                     onDeleteVote?()
                 } label: {

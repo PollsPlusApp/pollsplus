@@ -5,20 +5,22 @@ const { parsePagination, isValidCategory } = require('../utils/helpers');
 
 const router = express.Router();
 
-// GET /api/users/me/voted — Get debates the current user voted on
+// GET /api/users/me/voted — Get debates the current user voted on (with vote timestamp)
 router.get('/me/voted', authenticate, async (req, res) => {
   try {
     const { limit, offset } = parsePagination(req.query);
 
     const result = await pool.query(
-      `SELECT d.id, d.title, d.category, d.community_id, d.created_at,
+      `SELECT d.id, d.title, d.category, d.community_id, d.created_at, d.expires_at,
         u.id AS author_id, u.username AS author_username, u.category AS author_category,
         (SELECT COALESCE(json_agg(json_build_object(
           'id', o.id, 'label', o.label, 'position', o.position,
           'vote_count', (SELECT COUNT(*) FROM votes v2 WHERE v2.option_id = o.id)::int
         ) ORDER BY o.position), '[]') FROM debate_options o WHERE o.debate_id = d.id) AS options,
         (SELECT COUNT(*) FROM votes v2 WHERE v2.debate_id = d.id)::int AS total_votes,
-        (SELECT option_id FROM votes v2 WHERE v2.user_id = $1 AND v2.debate_id = d.id) AS my_vote_option_id
+        (SELECT option_id FROM votes v2 WHERE v2.user_id = $1 AND v2.debate_id = d.id) AS my_vote_option_id,
+        v.created_at AS my_vote_created_at,
+        EXISTS(SELECT 1 FROM pins WHERE user_id = $1 AND debate_id = d.id) AS is_pinned
       FROM votes v
       JOIN debates d ON v.debate_id = d.id
       JOIN users u ON d.user_id = u.id
@@ -32,6 +34,40 @@ router.get('/me/voted', authenticate, async (req, res) => {
     res.json({ debates: result.rows });
   } catch (err) {
     console.error('Get voted debates error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// GET /api/users/me/pinned — Get debates the current user has pinned
+router.get('/me/pinned', authenticate, async (req, res) => {
+  try {
+    const { limit, offset } = parsePagination(req.query);
+
+    const result = await pool.query(
+      `SELECT d.id, d.title, d.category, d.community_id, d.created_at, d.expires_at,
+        u.id AS author_id, u.username AS author_username, u.category AS author_category,
+        (SELECT COALESCE(json_agg(json_build_object(
+          'id', o.id, 'label', o.label, 'position', o.position,
+          'vote_count', (SELECT COUNT(*) FROM votes v2 WHERE v2.option_id = o.id)::int
+        ) ORDER BY o.position), '[]') FROM debate_options o WHERE o.debate_id = d.id) AS options,
+        (SELECT COUNT(*) FROM votes v2 WHERE v2.debate_id = d.id)::int AS total_votes,
+        (SELECT option_id FROM votes v2 WHERE v2.user_id = $1 AND v2.debate_id = d.id) AS my_vote_option_id,
+        (SELECT created_at FROM votes v2 WHERE v2.user_id = $1 AND v2.debate_id = d.id) AS my_vote_created_at,
+        true AS is_pinned,
+        p.pin_type
+      FROM pins p
+      JOIN debates d ON p.debate_id = d.id
+      JOIN users u ON d.user_id = u.id
+      WHERE p.user_id = $1
+        AND NOT EXISTS (SELECT 1 FROM blocks WHERE (blocker_id = $1 AND blocked_id = d.user_id) OR (blocker_id = d.user_id AND blocked_id = $1))
+      ORDER BY p.created_at DESC
+      LIMIT $2 OFFSET $3`,
+      [req.userId, limit, offset]
+    );
+
+    res.json({ debates: result.rows });
+  } catch (err) {
+    console.error('Get pinned debates error:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });
