@@ -58,13 +58,20 @@ router.post('/', authenticate, async (req, res) => {
 
       await client.query('COMMIT');
 
+      // Get author info for response
+      const author = await client.query('SELECT username, category FROM users WHERE id = $1', [req.userId]);
+
       res.status(201).json({
         ...debate,
+        author_id: req.userId,
+        author_username: author.rows[0].username,
+        author_category: author.rows[0].category,
         options: optionResult.rows.map(o => ({ ...o, vote_count: 0 })),
         total_votes: 0,
         my_vote_option_id: null,
         my_vote_created_at: null,
         is_pinned: false,
+        comment_count: 0,
       });
     } catch (err) {
       await client.query('ROLLBACK');

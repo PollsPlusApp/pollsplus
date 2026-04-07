@@ -225,18 +225,21 @@ struct CreateDebateView: View {
     }
 
     private func submitToCategory(_ category: String) {
+        let net = network
+        let t = title.isEmpty ? nil : title
+        let opts = options.map { $0.trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty }
+        let expiry = expiryString
         showPostTo = false
         isLoading = true
         error = nil
-        let validOptions = options.map { $0.trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty }
         Task {
             do {
-                _ = try await network.createDebate(
-                    title: title.isEmpty ? nil : title,
+                _ = try await net.createDebate(
+                    title: t,
                     category: category,
-                    options: validOptions,
+                    options: opts,
                     communityId: nil,
-                    expiresAt: expiryString
+                    expiresAt: expiry
                 )
                 dismiss()
             } catch {
@@ -247,18 +250,21 @@ struct CreateDebateView: View {
     }
 
     private func submitToCommunity(communityId: Int, category: String) {
+        let net = network
+        let t = title.isEmpty ? nil : title
+        let opts = options.map { $0.trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty }
+        let expiry = expiryString
         showPostTo = false
         isLoading = true
         error = nil
-        let validOptions = options.map { $0.trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty }
         Task {
             do {
-                _ = try await network.createDebate(
-                    title: title.isEmpty ? nil : title,
+                _ = try await net.createDebate(
+                    title: t,
                     category: category,
-                    options: validOptions,
+                    options: opts,
                     communityId: communityId,
-                    expiresAt: expiryString
+                    expiresAt: expiry
                 )
                 dismiss()
             } catch {
