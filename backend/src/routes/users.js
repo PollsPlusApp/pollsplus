@@ -115,6 +115,19 @@ router.put('/me/category', authenticate, async (req, res) => {
   }
 });
 
+// DELETE /api/users/me — Delete own account and all associated data
+router.delete('/me', authenticate, async (req, res) => {
+  try {
+    // CASCADE handles: debates, votes, follows, blocks, reports,
+    // community_members, notifications, seen_posts, pins, debate_options (via debates)
+    await pool.query('DELETE FROM users WHERE id = $1', [req.userId]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Delete account error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 // GET /api/users/:id — Get user profile
 router.get('/:id', authenticate, async (req, res) => {
   try {

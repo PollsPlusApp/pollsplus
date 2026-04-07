@@ -173,6 +173,11 @@ class NetworkManager: ObservableObject {
         try await request("GET", path: "/api/users/me/communities?page=\(page)")
     }
 
+    func deleteAccount() async throws {
+        try await requestNoResponse("DELETE", path: "/api/users/me")
+        logout()
+    }
+
     func updateCategory(_ category: String) async throws {
         struct Body: Encodable { let category: String }
         let _: SuccessResponse = try await request("PUT", path: "/api/users/me/category", body: Body(category: category))

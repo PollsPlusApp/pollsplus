@@ -7,6 +7,7 @@ struct CreateDebateView: View {
     // If passed in, we skip the "Post to" picker and post directly to this community
     var preselectedCommunityId: Int? = nil
     var preselectedCommunityName: String? = nil
+    var preselectedCommunityCategory: String? = nil
 
     @State private var title = ""
     @State private var options = ["", ""]
@@ -185,8 +186,7 @@ struct CreateDebateView: View {
     private var postToButton: some View {
         Button {
             if let communityId = preselectedCommunityId {
-                // Already know the community, just post
-                submitToCommunity(communityId: communityId, category: "General")
+                submitToCommunity(communityId: communityId, category: preselectedCommunityCategory ?? "General")
             } else {
                 showPostTo = true
             }

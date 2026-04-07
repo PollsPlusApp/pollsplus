@@ -27,7 +27,7 @@ struct CommunityDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .task { await loadCommunity() }
         .sheet(isPresented: $showCreateDebate) {
-            CreateDebateView(preselectedCommunityId: communityId, preselectedCommunityName: community?.name)
+            CreateDebateView(preselectedCommunityId: communityId, preselectedCommunityName: community?.name, preselectedCommunityCategory: community?.category)
         }
         .sheet(isPresented: $showMembers) {
             membersSheet

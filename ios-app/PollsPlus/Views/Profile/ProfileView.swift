@@ -10,6 +10,7 @@ struct ProfileView: View {
     @State private var reportReason = ""
     @State private var showBlockConfirm = false
     @State private var showLogoutConfirm = false
+    @State private var showDeleteAccount = false
     @State private var showChangeCategory = false
     @State private var selectedProfileTab = 0
 
@@ -55,6 +56,13 @@ struct ProfileView: View {
         .confirmationDialog("Are you sure you want to log out?", isPresented: $showLogoutConfirm, titleVisibility: .visible) {
             Button("Log Out", role: .destructive) {
                 network.logout()
+            }
+        }
+        .confirmationDialog("Delete your account? This permanently removes all your data — debates, votes, communities, and followers. This cannot be undone.", isPresented: $showDeleteAccount, titleVisibility: .visible) {
+            Button("Delete My Account", role: .destructive) {
+                Task {
+                    try? await network.deleteAccount()
+                }
             }
         }
         .sheet(isPresented: $showChangeCategory) {
@@ -136,16 +144,30 @@ struct ProfileView: View {
     // MARK: - Own Profile Actions
 
     private var ownProfileActions: some View {
-        Button {
-            showLogoutConfirm = true
-        } label: {
-            Text("Log Out")
-                .font(.subheadline.bold())
-                .frame(width: 120)
-                .padding(.vertical, 10)
-                .background(Color(.systemGray5))
-                .foregroundStyle(.red)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+        HStack(spacing: 12) {
+            Button {
+                showLogoutConfirm = true
+            } label: {
+                Text("Log Out")
+                    .font(.subheadline.bold())
+                    .frame(width: 110)
+                    .padding(.vertical, 10)
+                    .background(Color(.systemGray5))
+                    .foregroundStyle(.primary)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+            }
+
+            Button {
+                showDeleteAccount = true
+            } label: {
+                Text("Delete Account")
+                    .font(.subheadline.bold())
+                    .frame(width: 140)
+                    .padding(.vertical, 10)
+                    .background(Color.red.opacity(0.1))
+                    .foregroundStyle(.red)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+            }
         }
     }
 
