@@ -1,4 +1,5 @@
 import Foundation
+import FirebaseAnalytics
 
 enum APIError: LocalizedError {
     case invalidURL
@@ -110,6 +111,7 @@ class NetworkManager: ObservableObject {
         token = resp.token
         currentUserId = resp.user.id
         currentUsername = resp.user.username
+        Analytics.logEvent("sign_up", parameters: ["category": category])
         return resp
     }
 
@@ -117,6 +119,7 @@ class NetworkManager: ObservableObject {
         struct Body: Encodable { let email, password: String }
         let resp: AuthResponse = try await request("POST", path: "/api/auth/login",
             body: Body(email: email, password: password))
+        Analytics.logEvent("login", parameters: nil)
         token = resp.token
         currentUserId = resp.user.id
         currentUsername = resp.user.username
@@ -134,6 +137,7 @@ class NetworkManager: ObservableObject {
 
     func follow(userId: Int) async throws {
         try await requestNoResponse("POST", path: "/api/users/\(userId)/follow")
+        Analytics.logEvent("follow_user", parameters: nil)
     }
 
     func unfollow(userId: Int) async throws {
@@ -185,8 +189,10 @@ class NetworkManager: ObservableObject {
 
     // MARK: - Debates
     func createDebate(title: String?, category: String, options: [String], communityId: Int? = nil, expiresAt: String? = nil) async throws -> Debate {
-        try await request("POST", path: "/api/debates",
+        let result: Debate = try await request("POST", path: "/api/debates",
             body: CreateDebateRequest(title: title, category: category, options: options, communityId: communityId, expiresAt: expiresAt))
+        Analytics.logEvent("create_debate", parameters: ["category": category, "option_count": options.count, "has_deadline": expiresAt != nil])
+        return result
     }
 
     func getDebate(id: Int) async throws -> Debate {
@@ -200,6 +206,7 @@ class NetworkManager: ObservableObject {
     func vote(debateId: Int, optionId: Int) async throws {
         struct Body: Encodable { let option_id: Int }
         try await requestNoResponse("POST", path: "/api/debates/\(debateId)/vote", body: Body(option_id: optionId))
+        Analytics.logEvent("vote", parameters: nil)
     }
 
     func deleteVote(debateId: Int) async throws {
@@ -244,8 +251,10 @@ class NetworkManager: ObservableObject {
     // MARK: - Communities
     func createCommunity(name: String, category: String, isPrivate: Bool) async throws -> Community {
         struct Body: Encodable { let name, category: String; let is_private: Bool }
-        return try await request("POST", path: "/api/communities",
+        let result: Community = try await request("POST", path: "/api/communities",
             body: Body(name: name, category: category, is_private: isPrivate))
+        Analytics.logEvent("create_community", parameters: ["category": category, "is_private": isPrivate])
+        return result
     }
 
     func getCommunity(id: Int) async throws -> Community {
@@ -257,7 +266,9 @@ class NetworkManager: ObservableObject {
     }
 
     func joinCommunity(id: Int) async throws -> JoinResponse {
-        try await request("POST", path: "/api/communities/\(id)/join")
+        let result: JoinResponse = try await request("POST", path: "/api/communities/\(id)/join")
+        Analytics.logEvent("join_community", parameters: nil)
+        return result
     }
 
     func leaveCommunity(id: Int) async throws {
@@ -296,6 +307,27 @@ class NetworkManager: ObservableObject {
 
     func markNotificationsRead() async throws {
         try await requestNoResponse("POST", path: "/api/notifications/read")
+    }
+
+    // MARK: - Comments
+    func getComments(debateId: Int, page: Int = 1) async throws -> CommentsResponse {
+        try await request("GET", path: "/api/debates/\(debateId)/comments?page=\(page)")
+    }
+
+    func getReplies(debateId: Int, commentId: Int, page: Int = 1) async throws -> RepliesResponse {
+        try await request("GET", path: "/api/debates/\(debateId)/comments/\(commentId)/replies?page=\(page)")
+    }
+
+    func postComment(debateId: Int, content: String, parentId: Int? = nil) async throws -> Comment {
+        struct Body: Encodable { let content: String; let parent_id: Int? }
+        let result: Comment = try await request("POST", path: "/api/debates/\(debateId)/comments",
+            body: Body(content: content, parent_id: parentId))
+        Analytics.logEvent("post_comment", parameters: ["is_reply": parentId != nil])
+        return result
+    }
+
+    func deleteComment(debateId: Int, commentId: Int) async throws {
+        try await requestNoResponse("DELETE", path: "/api/debates/\(debateId)/comments/\(commentId)")
     }
 
     // MARK: - Search

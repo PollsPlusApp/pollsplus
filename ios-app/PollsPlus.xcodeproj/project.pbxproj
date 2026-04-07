@@ -7,190 +7,198 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A1B2C3D4E5F60001000001AA /* PollsPlusApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60001000002AA /* PollsPlusApp.swift */; };
-		A1B2C3D4E5F60001000003AA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60001000004AA /* Assets.xcassets */; };
-		A1B2C3D4E5F60001000005AA /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60001000006AA /* Models.swift */; };
-		A1B2C3D4E5F60001000007AA /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60001000008AA /* NetworkManager.swift */; };
-		A1B2C3D4E5F60001000009AA /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000AAA /* MainTabView.swift */; };
-		A1B2C3D4E5F6000100000BAA /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000CAA /* LoginView.swift */; };
-		A1B2C3D4E5F6000100000DAA /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100000EAA /* RegisterView.swift */; };
-		A1B2C3D4E5F6000100000FAA /* CategoryIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60001000010AA /* CategoryIcon.swift */; };
-		A1B2C3D4E5F60001000011AA /* DebateCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60001000012AA /* DebateCard.swift */; };
-		A1B2C3D4E5F60001000013AA /* FeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60001000014AA /* FeedView.swift */; };
-		A1B2C3D4E5F60001000015AA /* DebateListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60001000016AA /* DebateListView.swift */; };
-		A1B2C3D4E5F60001000017AA /* CreateDebateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60001000018AA /* CreateDebateView.swift */; };
-		A1B2C3D4E5F60001000019AA /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100001AAA /* ProfileView.swift */; };
-		A1B2C3D4E5F6000100001BAA /* UserListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100001CAA /* UserListView.swift */; };
-		A1B2C3D4E5F6000100001DAA /* CommunitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6000100001EAA /* CommunitiesView.swift */; };
-		A1B2C3D4E5F6000100001FAA /* CommunityDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60001000020AA /* CommunityDetailView.swift */; };
-		A1B2C3D4E5F60001000021AA /* CreateCommunityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60001000022AA /* CreateCommunityView.swift */; };
-		A1B2C3D4E5F60001000023AA /* MembersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60001000024AA /* MembersListView.swift */; };
-		A1B2C3D4E5F60001000025AA /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60001000026AA /* NotificationsView.swift */; };
-		B2C3D4E5F6A70001000099BB /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60001000029AA /* SearchView.swift */; };
+		2B7C37F62F858D6C00AD1870 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 2B7C37F52F858D6C00AD1870 /* FirebaseAnalytics */; };
+		AA000001000001AA /* PollsPlusApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000001AA /* PollsPlusApp.swift */; };
+		AA000001000002AA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB000001000002AA /* Assets.xcassets */; };
+		AA000001000016AA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB000001000016AA /* GoogleService-Info.plist */; };
+		AA000001000003AA /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000003AA /* Models.swift */; };
+		AA000001000004AA /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000004AA /* NetworkManager.swift */; };
+		AA000001000005AA /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000005AA /* MainTabView.swift */; };
+		AA000001000006AA /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000006AA /* LoginView.swift */; };
+		AA000001000007AA /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000007AA /* RegisterView.swift */; };
+		AA000001000008AA /* CategoryIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000008AA /* CategoryIcon.swift */; };
+		AA000001000009AA /* DebateCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000009AA /* DebateCard.swift */; };
+		AA00000100000AAA /* FeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000100000AAA /* FeedView.swift */; };
+		AA00000100000BAA /* DebateListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000100000BAA /* DebateListView.swift */; };
+		AA00000100000CAA /* CreateDebateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000100000CAA /* CreateDebateView.swift */; };
+		AA00000100000DAA /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000100000DAA /* ProfileView.swift */; };
+		AA00000100000EAA /* UserListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000100000EAA /* UserListView.swift */; };
+		AA00000100000FAA /* CommunitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000100000FAA /* CommunitiesView.swift */; };
+		AA000001000010AA /* CommunityDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000010AA /* CommunityDetailView.swift */; };
+		AA000001000011AA /* CreateCommunityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000011AA /* CreateCommunityView.swift */; };
+		AA000001000012AA /* MembersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000012AA /* MembersListView.swift */; };
+		AA000001000013AA /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000013AA /* NotificationsView.swift */; };
+		AA000001000014AA /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000014AA /* SearchView.swift */; };
+		AA000001000015AA /* CommentSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000015AA /* CommentSection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A1B2C3D4E5F60001000027AA /* PollsPlus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PollsPlus.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A1B2C3D4E5F60001000002AA /* PollsPlusApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsPlusApp.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60001000004AA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		A1B2C3D4E5F60001000006AA /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60001000008AA /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F6000100000AAA /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F6000100000CAA /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F6000100000EAA /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60001000010AA /* CategoryIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryIcon.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60001000012AA /* DebateCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebateCard.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60001000014AA /* FeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedView.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60001000016AA /* DebateListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebateListView.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60001000018AA /* CreateDebateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDebateView.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F6000100001AAA /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F6000100001CAA /* UserListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListView.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F6000100001EAA /* CommunitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunitiesView.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60001000020AA /* CommunityDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityDetailView.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60001000022AA /* CreateCommunityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCommunityView.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60001000024AA /* MembersListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembersListView.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60001000026AA /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60001000029AA /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
+		BB000001000000AA /* PollsPlus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PollsPlus.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BB000001000001AA /* PollsPlusApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsPlusApp.swift; sourceTree = "<group>"; };
+		BB000001000002AA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		BB000001000003AA /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		BB000001000004AA /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		BB000001000005AA /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		BB000001000006AA /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		BB000001000007AA /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
+		BB000001000008AA /* CategoryIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryIcon.swift; sourceTree = "<group>"; };
+		BB000001000009AA /* DebateCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebateCard.swift; sourceTree = "<group>"; };
+		BB00000100000AAA /* FeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedView.swift; sourceTree = "<group>"; };
+		BB00000100000BAA /* DebateListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebateListView.swift; sourceTree = "<group>"; };
+		BB00000100000CAA /* CreateDebateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDebateView.swift; sourceTree = "<group>"; };
+		BB00000100000DAA /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		BB00000100000EAA /* UserListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListView.swift; sourceTree = "<group>"; };
+		BB00000100000FAA /* CommunitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunitiesView.swift; sourceTree = "<group>"; };
+		BB000001000010AA /* CommunityDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityDetailView.swift; sourceTree = "<group>"; };
+		BB000001000011AA /* CreateCommunityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCommunityView.swift; sourceTree = "<group>"; };
+		BB000001000012AA /* MembersListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembersListView.swift; sourceTree = "<group>"; };
+		BB000001000013AA /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
+		BB000001000014AA /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
+		BB000001000015AA /* CommentSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentSection.swift; sourceTree = "<group>"; };
+		BB000001000016AA /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		A1B2C3D4E5F60001000028AA /* Frameworks */ = {
+		CC000001000001AA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B7C37F62F858D6C00AD1870 /* FirebaseAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		A1B2C3D4E5F60001000029AA = {
+		DD000001000001AA = {
 			isa = PBXGroup;
 			children = (
-				A1B2C3D4E5F6000100002AAA /* PollsPlus */,
-				A1B2C3D4E5F6000100002BAA /* Products */,
+				DD000001000003AA /* PollsPlus */,
+				DD000001000002AA /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		A1B2C3D4E5F6000100002BAA /* Products */ = {
+		DD000001000002AA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A1B2C3D4E5F60001000027AA /* PollsPlus.app */,
+				BB000001000000AA /* PollsPlus.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A1B2C3D4E5F6000100002AAA /* PollsPlus */ = {
+		DD000001000003AA /* PollsPlus */ = {
 			isa = PBXGroup;
 			children = (
-				A1B2C3D4E5F60001000002AA /* PollsPlusApp.swift */,
-				A1B2C3D4E5F60001000004AA /* Assets.xcassets */,
-				A1B2C3D4E5F6000100002CAA /* Models */,
-				A1B2C3D4E5F6000100002DAA /* Services */,
-				A1B2C3D4E5F6000100002EAA /* Views */,
+				BB000001000001AA /* PollsPlusApp.swift */,
+				BB000001000002AA /* Assets.xcassets */,
+				BB000001000016AA /* GoogleService-Info.plist */,
+				DD000001000004AA /* Models */,
+				DD000001000005AA /* Services */,
+				DD000001000006AA /* Views */,
 			);
 			path = PollsPlus;
 			sourceTree = "<group>";
 		};
-		A1B2C3D4E5F6000100002CAA /* Models */ = {
+		DD000001000004AA /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				A1B2C3D4E5F60001000006AA /* Models.swift */,
+				BB000001000003AA /* Models.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
 		};
-		A1B2C3D4E5F6000100002DAA /* Services */ = {
+		DD000001000005AA /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				A1B2C3D4E5F60001000008AA /* NetworkManager.swift */,
+				BB000001000004AA /* NetworkManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
 		};
-		A1B2C3D4E5F6000100002EAA /* Views */ = {
+		DD000001000006AA /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				A1B2C3D4E5F6000100000AAA /* MainTabView.swift */,
-				A1B2C3D4E5F6000100002FAA /* Auth */,
-				A1B2C3D4E5F60001000030AA /* Components */,
-				A1B2C3D4E5F60001000031AA /* Feeds */,
-				A1B2C3D4E5F60001000032AA /* Debates */,
-				A1B2C3D4E5F60001000033AA /* Profile */,
-				A1B2C3D4E5F60001000034AA /* Communities */,
-				A1B2C3D4E5F60001000035AA /* Notifications */,
-				A1B2C3D4E5F6000100003BAA /* Search */,
+				BB000001000005AA /* MainTabView.swift */,
+				DD000001000007AA /* Auth */,
+				DD000001000008AA /* Components */,
+				DD000001000009AA /* Feeds */,
+				DD00000100000AAA /* Debates */,
+				DD00000100000BAA /* Profile */,
+				DD00000100000CAA /* Communities */,
+				DD00000100000DAA /* Notifications */,
+				DD00000100000EAA /* Search */,
 			);
 			path = Views;
 			sourceTree = "<group>";
 		};
-		A1B2C3D4E5F6000100002FAA /* Auth */ = {
+		DD000001000007AA /* Auth */ = {
 			isa = PBXGroup;
 			children = (
-				A1B2C3D4E5F6000100000CAA /* LoginView.swift */,
-				A1B2C3D4E5F6000100000EAA /* RegisterView.swift */,
+				BB000001000006AA /* LoginView.swift */,
+				BB000001000007AA /* RegisterView.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
 		};
-		A1B2C3D4E5F60001000030AA /* Components */ = {
+		DD000001000008AA /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				A1B2C3D4E5F60001000010AA /* CategoryIcon.swift */,
-				A1B2C3D4E5F60001000012AA /* DebateCard.swift */,
+				BB000001000008AA /* CategoryIcon.swift */,
+				BB000001000009AA /* DebateCard.swift */,
+				BB000001000015AA /* CommentSection.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
 		};
-		A1B2C3D4E5F60001000031AA /* Feeds */ = {
+		DD000001000009AA /* Feeds */ = {
 			isa = PBXGroup;
 			children = (
-				A1B2C3D4E5F60001000014AA /* FeedView.swift */,
-				A1B2C3D4E5F60001000016AA /* DebateListView.swift */,
+				BB00000100000AAA /* FeedView.swift */,
+				BB00000100000BAA /* DebateListView.swift */,
 			);
 			path = Feeds;
 			sourceTree = "<group>";
 		};
-		A1B2C3D4E5F60001000032AA /* Debates */ = {
+		DD00000100000AAA /* Debates */ = {
 			isa = PBXGroup;
 			children = (
-				A1B2C3D4E5F60001000018AA /* CreateDebateView.swift */,
+				BB00000100000CAA /* CreateDebateView.swift */,
 			);
 			path = Debates;
 			sourceTree = "<group>";
 		};
-		A1B2C3D4E5F60001000033AA /* Profile */ = {
+		DD00000100000BAA /* Profile */ = {
 			isa = PBXGroup;
 			children = (
-				A1B2C3D4E5F6000100001AAA /* ProfileView.swift */,
-				A1B2C3D4E5F6000100001CAA /* UserListView.swift */,
+				BB00000100000DAA /* ProfileView.swift */,
+				BB00000100000EAA /* UserListView.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
 		};
-		A1B2C3D4E5F60001000034AA /* Communities */ = {
+		DD00000100000CAA /* Communities */ = {
 			isa = PBXGroup;
 			children = (
-				A1B2C3D4E5F6000100001EAA /* CommunitiesView.swift */,
-				A1B2C3D4E5F60001000020AA /* CommunityDetailView.swift */,
-				A1B2C3D4E5F60001000022AA /* CreateCommunityView.swift */,
-				A1B2C3D4E5F60001000024AA /* MembersListView.swift */,
+				BB00000100000FAA /* CommunitiesView.swift */,
+				BB000001000010AA /* CommunityDetailView.swift */,
+				BB000001000011AA /* CreateCommunityView.swift */,
+				BB000001000012AA /* MembersListView.swift */,
 			);
 			path = Communities;
 			sourceTree = "<group>";
 		};
-		A1B2C3D4E5F60001000035AA /* Notifications */ = {
+		DD00000100000DAA /* Notifications */ = {
 			isa = PBXGroup;
 			children = (
-				A1B2C3D4E5F60001000026AA /* NotificationsView.swift */,
+				BB000001000013AA /* NotificationsView.swift */,
 			);
 			path = Notifications;
 			sourceTree = "<group>";
 		};
-		A1B2C3D4E5F6000100003BAA /* Search */ = {
+		DD00000100000EAA /* Search */ = {
 			isa = PBXGroup;
 			children = (
-				A1B2C3D4E5F60001000029AA /* SearchView.swift */,
+				BB000001000014AA /* SearchView.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -198,13 +206,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A1B2C3D4E5F60001000036AA /* PollsPlus */ = {
+		EE000001000001AA /* PollsPlus */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A1B2C3D4E5F60001000037AA /* Build configuration list for PBXNativeTarget "PollsPlus" */;
+			buildConfigurationList = FF000001000003AA /* Build configuration list for PBXNativeTarget "PollsPlus" */;
 			buildPhases = (
-				A1B2C3D4E5F60001000038AA /* Sources */,
-				A1B2C3D4E5F60001000028AA /* Frameworks */,
-				A1B2C3D4E5F60001000039AA /* Resources */,
+				CC000001000002AA /* Sources */,
+				CC000001000001AA /* Frameworks */,
+				CC000001000003AA /* Resources */,
 			);
 			buildRules = (
 			);
@@ -212,25 +220,25 @@
 			);
 			name = PollsPlus;
 			productName = PollsPlus;
-			productReference = A1B2C3D4E5F60001000027AA /* PollsPlus.app */;
+			productReference = BB000001000000AA /* PollsPlus.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		A1B2C3D4E5F6000100003AAA /* Project object */ = {
+		EE000001000002AA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
-					A1B2C3D4E5F60001000036AA = {
+					EE000001000001AA = {
 						CreatedOnToolsVersion = 15.0;
 					};
 				};
 			};
-			buildConfigurationList = A1B2C3D4E5F6000100003BAA /* Build configuration list for PBXProject "PollsPlus" */;
+			buildConfigurationList = FF000001000001AA /* Build configuration list for PBXProject "PollsPlus" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -238,58 +246,63 @@
 				en,
 				Base,
 			);
-			mainGroup = A1B2C3D4E5F60001000029AA;
-			productRefGroup = A1B2C3D4E5F6000100002BAA /* Products */;
+			mainGroup = DD000001000001AA;
+			packageReferences = (
+				2B7C37F42F858D6C00AD1870 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
+			productRefGroup = DD000001000002AA /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A1B2C3D4E5F60001000036AA /* PollsPlus */,
+				EE000001000001AA /* PollsPlus */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		A1B2C3D4E5F60001000039AA /* Resources */ = {
+		CC000001000003AA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1B2C3D4E5F60001000003AA /* Assets.xcassets in Resources */,
+				AA000001000002AA /* Assets.xcassets in Resources */,
+				AA000001000016AA /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		A1B2C3D4E5F60001000038AA /* Sources */ = {
+		CC000001000002AA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1B2C3D4E5F60001000001AA /* PollsPlusApp.swift in Sources */,
-				A1B2C3D4E5F60001000005AA /* Models.swift in Sources */,
-				A1B2C3D4E5F60001000007AA /* NetworkManager.swift in Sources */,
-				A1B2C3D4E5F60001000009AA /* MainTabView.swift in Sources */,
-				A1B2C3D4E5F6000100000BAA /* LoginView.swift in Sources */,
-				A1B2C3D4E5F6000100000DAA /* RegisterView.swift in Sources */,
-				A1B2C3D4E5F6000100000FAA /* CategoryIcon.swift in Sources */,
-				A1B2C3D4E5F60001000011AA /* DebateCard.swift in Sources */,
-				A1B2C3D4E5F60001000013AA /* FeedView.swift in Sources */,
-				A1B2C3D4E5F60001000015AA /* DebateListView.swift in Sources */,
-				A1B2C3D4E5F60001000017AA /* CreateDebateView.swift in Sources */,
-				A1B2C3D4E5F60001000019AA /* ProfileView.swift in Sources */,
-				A1B2C3D4E5F6000100001BAA /* UserListView.swift in Sources */,
-				A1B2C3D4E5F6000100001DAA /* CommunitiesView.swift in Sources */,
-				A1B2C3D4E5F6000100001FAA /* CommunityDetailView.swift in Sources */,
-				A1B2C3D4E5F60001000021AA /* CreateCommunityView.swift in Sources */,
-				A1B2C3D4E5F60001000023AA /* MembersListView.swift in Sources */,
-				A1B2C3D4E5F60001000025AA /* NotificationsView.swift in Sources */,
-				B2C3D4E5F6A70001000099BB /* SearchView.swift in Sources */,
+				AA000001000001AA /* PollsPlusApp.swift in Sources */,
+				AA000001000003AA /* Models.swift in Sources */,
+				AA000001000004AA /* NetworkManager.swift in Sources */,
+				AA000001000005AA /* MainTabView.swift in Sources */,
+				AA000001000006AA /* LoginView.swift in Sources */,
+				AA000001000007AA /* RegisterView.swift in Sources */,
+				AA000001000008AA /* CategoryIcon.swift in Sources */,
+				AA000001000009AA /* DebateCard.swift in Sources */,
+				AA00000100000AAA /* FeedView.swift in Sources */,
+				AA00000100000BAA /* DebateListView.swift in Sources */,
+				AA00000100000CAA /* CreateDebateView.swift in Sources */,
+				AA00000100000DAA /* ProfileView.swift in Sources */,
+				AA00000100000EAA /* UserListView.swift in Sources */,
+				AA00000100000FAA /* CommunitiesView.swift in Sources */,
+				AA000001000010AA /* CommunityDetailView.swift in Sources */,
+				AA000001000011AA /* CreateCommunityView.swift in Sources */,
+				AA000001000012AA /* MembersListView.swift in Sources */,
+				AA000001000013AA /* NotificationsView.swift in Sources */,
+				AA000001000014AA /* SearchView.swift in Sources */,
+				AA000001000015AA /* CommentSection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		A1B2C3D4E5F6000100003CAA /* Debug */ = {
+		FF000001000004AA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -352,7 +365,7 @@
 			};
 			name = Debug;
 		};
-		A1B2C3D4E5F6000100003DAA /* Release */ = {
+		FF000001000005AA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -408,7 +421,7 @@
 			};
 			name = Release;
 		};
-		A1B2C3D4E5F6000100003EAA /* Debug */ = {
+		FF000001000006AA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -428,7 +441,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.pollsplus.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.timsmith.pollsplus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -439,7 +452,7 @@
 			};
 			name = Debug;
 		};
-		A1B2C3D4E5F6000100003FAA /* Release */ = {
+		FF000001000007AA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -459,7 +472,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.pollsplus.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.timsmith.pollsplus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -473,25 +486,44 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A1B2C3D4E5F6000100003BAA /* Build configuration list for PBXProject "PollsPlus" */ = {
+		FF000001000001AA /* Build configuration list for PBXProject "PollsPlus" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A1B2C3D4E5F6000100003CAA /* Debug */,
-				A1B2C3D4E5F6000100003DAA /* Release */,
+				FF000001000004AA /* Debug */,
+				FF000001000005AA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A1B2C3D4E5F60001000037AA /* Build configuration list for PBXNativeTarget "PollsPlus" */ = {
+		FF000001000003AA /* Build configuration list for PBXNativeTarget "PollsPlus" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A1B2C3D4E5F6000100003EAA /* Debug */,
-				A1B2C3D4E5F6000100003FAA /* Release */,
+				FF000001000006AA /* Debug */,
+				FF000001000007AA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2B7C37F42F858D6C00AD1870 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.12.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2B7C37F52F858D6C00AD1870 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2B7C37F42F858D6C00AD1870 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
-	rootObject = A1B2C3D4E5F6000100003AAA /* Project object */;
+	rootObject = EE000001000002AA /* Project object */;
 }

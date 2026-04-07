@@ -44,6 +44,7 @@ struct Debate: Codable, Identifiable {
     let myVoteOptionId: Int?
     let myVoteCreatedAt: String?
     let isPinned: Bool?
+    let commentCount: Int?
 
     enum CodingKeys: String, CodingKey {
         case id, title, category, options
@@ -57,6 +58,7 @@ struct Debate: Codable, Identifiable {
         case myVoteOptionId = "my_vote_option_id"
         case myVoteCreatedAt = "my_vote_created_at"
         case isPinned = "is_pinned"
+        case commentCount = "comment_count"
     }
 
     var hasVoted: Bool { myVoteOptionId != nil }
@@ -243,6 +245,50 @@ struct MembersResponse: Codable {
 
 struct PendingResponse: Codable {
     let pending: [CommunityMember]
+}
+
+// MARK: - Comments
+struct Comment: Codable, Identifiable {
+    let id: Int
+    let content: String
+    let parentId: Int?
+    let createdAt: String
+    let userId: Int
+    let username: String
+    let userCategory: String
+    let replyCount: Int
+
+    enum CodingKeys: String, CodingKey {
+        case id, content, username
+        case parentId = "parent_id"
+        case createdAt = "created_at"
+        case userId = "user_id"
+        case userCategory = "user_category"
+        case replyCount = "reply_count"
+    }
+
+    var timeAgo: String {
+        let f = ISO8601DateFormatter()
+        f.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        if let d = f.date(from: createdAt) { return d.timeAgoDisplay() }
+        f.formatOptions = [.withInternetDateTime]
+        if let d = f.date(from: createdAt) { return d.timeAgoDisplay() }
+        return ""
+    }
+}
+
+struct CommentsResponse: Codable {
+    let comments: [Comment]
+    let totalCount: Int
+
+    enum CodingKeys: String, CodingKey {
+        case comments
+        case totalCount = "total_count"
+    }
+}
+
+struct RepliesResponse: Codable {
+    let replies: [Comment]
 }
 
 struct SearchResponse: Codable {

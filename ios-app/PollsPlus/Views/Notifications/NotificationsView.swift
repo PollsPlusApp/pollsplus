@@ -92,6 +92,8 @@ struct NotificationsView: View {
     private func notificationText(_ type: String) -> String {
         switch type {
         case "new_follower": return "followed you"
+        case "debate_comment": return "commented on your debate"
+        case "comment_reply": return "replied to your comment"
         default: return "interacted with you"
         }
     }

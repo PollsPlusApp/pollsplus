@@ -189,3 +189,19 @@ CREATE TABLE pins (
 
 CREATE INDEX idx_pins_user ON pins (user_id);
 CREATE INDEX idx_pins_user_type ON pins (user_id, pin_type);
+
+-- ============================================
+-- COMMENTS
+-- ============================================
+CREATE TABLE comments (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    debate_id INTEGER NOT NULL REFERENCES debates(id) ON DELETE CASCADE,
+    parent_id INTEGER REFERENCES comments(id) ON DELETE CASCADE,
+    content TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_comments_debate ON comments (debate_id, created_at ASC);
+CREATE INDEX idx_comments_parent ON comments (parent_id);
+CREATE INDEX idx_comments_user ON comments (user_id);

@@ -9,6 +9,8 @@ struct DebateCard: View {
     var onPin: (() -> Void)?
     var onUnpin: (() -> Void)?
 
+    @State private var showComments = false
+
     private var catColor: Color { CategoryHelper.color(for: debate.category) }
 
     var body: some View {
@@ -18,6 +20,10 @@ struct DebateCard: View {
             expiryBanner
             optionsSection
             footerSection
+            if showComments {
+                Divider()
+                CommentSection(debateId: debate.id)
+            }
         }
         .padding(16)
         .background(
@@ -63,10 +69,13 @@ struct DebateCard: View {
         }
     }
 
+    private var hasCardActions: Bool {
+        onDelete != nil || debate.hasVoted || debate.authorId == (NetworkManager.shared.currentUserId ?? -1)
+    }
+
     @ViewBuilder
     private var cardMenu: some View {
-        let hasActions = onDelete != nil || debate.hasVoted || debate.authorId == (NetworkManager.shared.currentUserId ?? -1)
-        if hasActions {
+        if hasCardActions {
             Menu {
                 if debate.hasVoted || debate.authorId == (NetworkManager.shared.currentUserId ?? -1) {
                     if debate.isPinned == true {
@@ -169,10 +178,20 @@ struct DebateCard: View {
     // MARK: - Footer
 
     private var footerSection: some View {
-        HStack {
+        HStack(spacing: 16) {
             Label("\(debate.totalVotes)", systemImage: "chart.bar.fill")
                 .font(.caption.bold())
                 .foregroundStyle(catColor.opacity(0.7))
+
+            Button {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    showComments.toggle()
+                }
+            } label: {
+                Label("\(debate.commentCount ?? 0)", systemImage: "bubble.left.fill")
+                    .font(.caption.bold())
+                    .foregroundStyle(showComments ? catColor : .secondary)
+            }
 
             if let voteTime = debate.voteTimestampDisplay {
                 Text(voteTime)

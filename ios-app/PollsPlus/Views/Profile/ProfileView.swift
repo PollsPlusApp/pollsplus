@@ -341,6 +341,7 @@ struct MyCommunitiesListView: View {
         .padding(.top, 60)
     }
 
+    @ViewBuilder
     private func communityRow(_ community: Community) -> some View {
         NavigationLink {
             CommunityDetailView(communityId: community.id)

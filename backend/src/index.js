@@ -10,6 +10,7 @@ const feedRoutes = require('./routes/feeds');
 const communityRoutes = require('./routes/communities');
 const notificationRoutes = require('./routes/notifications');
 const searchRoutes = require('./routes/search');
+const commentRoutes = require('./routes/comments');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -32,6 +33,7 @@ app.use('/api/feeds', feedRoutes);
 app.use('/api/communities', communityRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/search', searchRoutes);
+app.use('/api/debates', commentRoutes);
 
 // 404 handler
 app.use((req, res) => {
