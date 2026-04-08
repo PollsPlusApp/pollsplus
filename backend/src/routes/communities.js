@@ -194,9 +194,17 @@ router.delete('/:id/leave', authenticate, async (req, res) => {
   }
 });
 
-// GET /api/communities/:id/members — List members
+// GET /api/communities/:id/members — List members (founder only)
 router.get('/:id/members', authenticate, async (req, res) => {
   try {
+    const community = await pool.query('SELECT founder_id FROM communities WHERE id = $1', [req.params.id]);
+    if (community.rows.length === 0) {
+      return res.status(404).json({ error: 'Community not found' });
+    }
+    if (community.rows[0].founder_id !== req.userId) {
+      return res.status(403).json({ error: 'Only the founder can view members' });
+    }
+
     const { limit, offset } = parsePagination(req.query);
 
     const result = await pool.query(

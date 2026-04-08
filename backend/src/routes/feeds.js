@@ -17,7 +17,8 @@ const DEBATE_SELECT = `
     (SELECT option_id FROM votes v WHERE v.user_id = $1 AND v.debate_id = d.id) AS my_vote_option_id,
     (SELECT created_at FROM votes v WHERE v.user_id = $1 AND v.debate_id = d.id) AS my_vote_created_at,
     EXISTS(SELECT 1 FROM pins WHERE user_id = $1 AND debate_id = d.id) AS is_pinned,
-    (SELECT COUNT(*) FROM comments WHERE debate_id = d.id)::int AS comment_count
+    (SELECT COUNT(*) FROM comments WHERE debate_id = d.id)::int AS comment_count,
+    (SELECT name FROM communities WHERE id = d.community_id) AS community_name
   FROM debates d
   JOIN users u ON d.user_id = u.id
 `;

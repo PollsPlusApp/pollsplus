@@ -37,6 +37,18 @@ struct ProfileView: View {
         }
         .navigationTitle(user?.username ?? "Profile")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            if isOwnProfile {
+                ToolbarItem(placement: .primaryAction) {
+                    NavigationLink {
+                        NotificationsView()
+                    } label: {
+                        Image(systemName: "bell.fill")
+                            .foregroundStyle(.primary)
+                    }
+                }
+            }
+        }
         .task { await loadUser() }
         .alert("Report User", isPresented: $showReportAlert) {
             TextField("Reason", text: $reportReason)
@@ -121,12 +133,16 @@ struct ProfileView: View {
             }
             .foregroundStyle(.primary)
 
-            NavigationLink {
-                UserListView(userId: userId, mode: .following)
-            } label: {
+            if isOwnProfile {
+                NavigationLink {
+                    UserListView(userId: userId, mode: .following)
+                } label: {
+                statColumn(value: user.followingCount ?? 0, label: "Following")
+                }
+                .foregroundStyle(.primary)
+            } else {
                 statColumn(value: user.followingCount ?? 0, label: "Following")
             }
-            .foregroundStyle(.primary)
         }
         .padding(.top, 4)
     }

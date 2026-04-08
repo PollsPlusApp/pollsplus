@@ -8,6 +8,7 @@ struct DebateCard: View {
     var onDelete: (() -> Void)?
     var onPin: (() -> Void)?
     var onUnpin: (() -> Void)?
+    var onTapCommunity: ((Int) -> Void)?
 
     @State private var showComments = false
 
@@ -57,6 +58,19 @@ struct DebateCard: View {
 
                 HStack(spacing: 6) {
                     CategoryBadge(category: debate.category)
+                    if let name = debate.communityName, let communityId = debate.communityId {
+                        Button {
+                            onTapCommunity?(communityId)
+                        } label: {
+                            HStack(spacing: 3) {
+                                Image(systemName: "person.3.fill")
+                                    .font(.system(size: 8))
+                                Text(name)
+                                    .font(.system(size: 11, weight: .semibold))
+                            }
+                            .foregroundStyle(catColor)
+                        }
+                    }
                     Text(debate.timeAgo)
                         .font(.caption2)
                         .foregroundStyle(.tertiary)

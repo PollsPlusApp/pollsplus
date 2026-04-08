@@ -18,6 +18,7 @@ struct DebateListView: View {
     @State private var hasMore = true
     @State private var error: String?
     @State private var navigateToProfile: Int?
+    @State private var navigateToCommunity: Int?
 
     var body: some View {
         ScrollView {
@@ -34,6 +35,9 @@ struct DebateListView: View {
         }
         .navigationDestination(item: $navigateToProfile) { userId in
             ProfileView(userId: userId)
+        }
+        .navigationDestination(item: $navigateToCommunity) { communityId in
+            CommunityDetailView(communityId: communityId)
         }
     }
 
@@ -103,6 +107,9 @@ struct DebateListView: View {
             },
             onUnpin: {
                 Task { await unpinDebate(debate: debate, index: index) }
+            },
+            onTapCommunity: { communityId in
+                navigateToCommunity = communityId
             }
         )
         .padding(.horizontal)

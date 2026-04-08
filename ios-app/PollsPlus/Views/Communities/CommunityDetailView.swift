@@ -87,9 +87,8 @@ struct CommunityDetailView: View {
                 joinButton
             }
 
-            membersButton
-
             if community.isFounder == true {
+                membersButton
                 pendingButton
             }
         }

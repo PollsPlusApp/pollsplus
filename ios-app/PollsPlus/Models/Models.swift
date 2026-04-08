@@ -45,6 +45,7 @@ struct Debate: Codable, Identifiable {
     let myVoteCreatedAt: String?
     let isPinned: Bool?
     let commentCount: Int?
+    let communityName: String?
 
     enum CodingKeys: String, CodingKey {
         case id, title, category, options
@@ -59,6 +60,7 @@ struct Debate: Codable, Identifiable {
         case myVoteCreatedAt = "my_vote_created_at"
         case isPinned = "is_pinned"
         case commentCount = "comment_count"
+        case communityName = "community_name"
     }
 
     var hasVoted: Bool { myVoteOptionId != nil }

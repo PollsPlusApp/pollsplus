@@ -240,7 +240,9 @@ class NetworkManager: ObservableObject {
     }
 
     func feedCategory(_ category: String, page: Int = 1) async throws -> DebatesResponse {
-        let encoded = category.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? category
+        var allowed = CharacterSet.urlPathAllowed
+        allowed.remove("/")
+        let encoded = category.addingPercentEncoding(withAllowedCharacters: allowed) ?? category
         return try await request("GET", path: "/api/feeds/category/\(encoded)?page=\(page)")
     }
 
@@ -296,7 +298,9 @@ class NetworkManager: ObservableObject {
     }
 
     func browseCommunities(category: String, page: Int = 1) async throws -> CommunitiesResponse {
-        let encoded = category.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? category
+        var allowed = CharacterSet.urlPathAllowed
+        allowed.remove("/")
+        let encoded = category.addingPercentEncoding(withAllowedCharacters: allowed) ?? category
         return try await request("GET", path: "/api/communities/browse/\(encoded)?page=\(page)")
     }
 

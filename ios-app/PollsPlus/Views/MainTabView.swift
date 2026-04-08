@@ -19,8 +19,8 @@ struct MainTabView: View {
                 .tabItem { Label("Post", systemImage: "plus.circle.fill") }
                 .tag(2)
 
-            NotificationsView()
-                .tabItem { Label("Alerts", systemImage: "bell.fill") }
+            CommunitiesView()
+                .tabItem { Label("Groups", systemImage: "person.3.fill") }
                 .tag(3)
 
             NavigationStack {

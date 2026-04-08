@@ -20,7 +20,9 @@ router.get('/me/voted', authenticate, async (req, res) => {
         (SELECT COUNT(*) FROM votes v2 WHERE v2.debate_id = d.id)::int AS total_votes,
         (SELECT option_id FROM votes v2 WHERE v2.user_id = $1 AND v2.debate_id = d.id) AS my_vote_option_id,
         v.created_at AS my_vote_created_at,
-        EXISTS(SELECT 1 FROM pins WHERE user_id = $1 AND debate_id = d.id) AS is_pinned
+        EXISTS(SELECT 1 FROM pins WHERE user_id = $1 AND debate_id = d.id) AS is_pinned,
+        (SELECT COUNT(*) FROM comments WHERE debate_id = d.id)::int AS comment_count,
+        (SELECT name FROM communities WHERE id = d.community_id) AS community_name
       FROM votes v
       JOIN debates d ON v.debate_id = d.id
       JOIN users u ON d.user_id = u.id
@@ -54,7 +56,9 @@ router.get('/me/pinned', authenticate, async (req, res) => {
         (SELECT option_id FROM votes v2 WHERE v2.user_id = $1 AND v2.debate_id = d.id) AS my_vote_option_id,
         (SELECT created_at FROM votes v2 WHERE v2.user_id = $1 AND v2.debate_id = d.id) AS my_vote_created_at,
         true AS is_pinned,
-        p.pin_type
+        p.pin_type,
+        (SELECT COUNT(*) FROM comments WHERE debate_id = d.id)::int AS comment_count,
+        (SELECT name FROM communities WHERE id = d.community_id) AS community_name
       FROM pins p
       JOIN debates d ON p.debate_id = d.id
       JOIN users u ON d.user_id = u.id
@@ -168,7 +172,11 @@ router.get('/:id/debates', authenticate, async (req, res) => {
           'vote_count', (SELECT COUNT(*) FROM votes v WHERE v.option_id = o.id)::int
         ) ORDER BY o.position), '[]') FROM debate_options o WHERE o.debate_id = d.id) AS options,
         (SELECT COUNT(*) FROM votes v WHERE v.debate_id = d.id)::int AS total_votes,
-        (SELECT option_id FROM votes v WHERE v.user_id = $3 AND v.debate_id = d.id) AS my_vote_option_id
+        (SELECT option_id FROM votes v WHERE v.user_id = $3 AND v.debate_id = d.id) AS my_vote_option_id,
+        (SELECT created_at FROM votes v WHERE v.user_id = $3 AND v.debate_id = d.id) AS my_vote_created_at,
+        EXISTS(SELECT 1 FROM pins WHERE user_id = $3 AND debate_id = d.id) AS is_pinned,
+        (SELECT COUNT(*) FROM comments WHERE debate_id = d.id)::int AS comment_count,
+        (SELECT name FROM communities WHERE id = d.community_id) AS community_name
       FROM debates d
       JOIN users u ON d.user_id = u.id
       WHERE d.user_id = $1
@@ -238,9 +246,12 @@ router.delete('/:id/follow', authenticate, async (req, res) => {
   }
 });
 
-// GET /api/users/:id/following — List who user follows
+// GET /api/users/:id/following — List who user follows (private — only viewable by the user themselves)
 router.get('/:id/following', authenticate, async (req, res) => {
   try {
+    if (parseInt(req.params.id) !== req.userId) {
+      return res.status(403).json({ error: 'Following list is private' });
+    }
     const { limit, offset } = parsePagination(req.query);
     const result = await pool.query(
       `SELECT u.id, u.username, u.category
