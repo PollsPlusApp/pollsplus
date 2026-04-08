@@ -327,4 +327,47 @@ router.delete('/:id/debates/:debateId', authenticate, async (req, res) => {
   }
 });
 
+// DELETE /api/communities/:id — Delete community (founder only)
+router.delete('/:id', authenticate, async (req, res) => {
+  try {
+    const communityId = parseInt(req.params.id);
+    const community = await pool.query('SELECT founder_id FROM communities WHERE id = $1', [communityId]);
+    if (community.rows.length === 0) {
+      return res.status(404).json({ error: 'Community not found' });
+    }
+    if (community.rows[0].founder_id !== req.userId) {
+      return res.status(403).json({ error: 'Only the founder can delete this community' });
+    }
+
+    // Delete all debates in this community first, then the community (CASCADE handles members)
+    await pool.query('DELETE FROM debates WHERE community_id = $1', [communityId]);
+    await pool.query('DELETE FROM communities WHERE id = $1', [communityId]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Delete community error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// PUT /api/communities/:id/privacy — Toggle public/private (founder only)
+router.put('/:id/privacy', authenticate, async (req, res) => {
+  try {
+    const communityId = parseInt(req.params.id);
+    const community = await pool.query('SELECT founder_id, is_private FROM communities WHERE id = $1', [communityId]);
+    if (community.rows.length === 0) {
+      return res.status(404).json({ error: 'Community not found' });
+    }
+    if (community.rows[0].founder_id !== req.userId) {
+      return res.status(403).json({ error: 'Only the founder can change privacy settings' });
+    }
+
+    const newPrivacy = !community.rows[0].is_private;
+    await pool.query('UPDATE communities SET is_private = $1 WHERE id = $2', [newPrivacy, communityId]);
+    res.json({ success: true, is_private: newPrivacy });
+  } catch (err) {
+    console.error('Toggle privacy error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 module.exports = router;

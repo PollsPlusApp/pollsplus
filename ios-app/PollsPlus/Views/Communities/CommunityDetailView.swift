@@ -9,6 +9,7 @@ struct CommunityDetailView: View {
     @State private var showCreateDebate = false
     @State private var showMembers = false
     @State private var showPending = false
+    @State private var showDeleteConfirm = false
 
     var body: some View {
         ScrollView {
@@ -34,6 +35,11 @@ struct CommunityDetailView: View {
         }
         .sheet(isPresented: $showPending) {
             pendingSheet
+        }
+        .confirmationDialog("Delete this community? All posts inside will be removed. This cannot be undone.", isPresented: $showDeleteConfirm, titleVisibility: .visible) {
+            Button("Delete Community", role: .destructive) {
+                Task { await deleteCommunity() }
+            }
         }
     }
 
@@ -72,24 +78,71 @@ struct CommunityDetailView: View {
                 Label("Private", systemImage: "lock.fill")
                     .font(.caption)
                     .foregroundStyle(.orange)
+            } else {
+                Label("Public", systemImage: "lock.open.fill")
+                    .font(.caption)
+                    .foregroundStyle(.green)
             }
         }
     }
 
     @ViewBuilder
     private func communityActions(_ community: Community) -> some View {
-        HStack(spacing: 12) {
-            if community.isMember == true {
-                memberActions(community)
-            } else if community.isPending == true {
-                pendingBadge
-            } else {
-                joinButton
+        VStack(spacing: 12) {
+            HStack(spacing: 12) {
+                if community.isMember == true {
+                    memberActions(community)
+                } else if community.isPending == true {
+                    pendingBadge
+                } else {
+                    joinButton
+                }
+
+                if community.isFounder == true {
+                    membersButton
+                    pendingButton
+                }
             }
 
             if community.isFounder == true {
-                membersButton
-                pendingButton
+                founderManageRow(community)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func founderManageRow(_ community: Community) -> some View {
+        HStack(spacing: 12) {
+            Button {
+                Task { await togglePrivacy() }
+            } label: {
+                HStack(spacing: 5) {
+                    Image(systemName: community.isPrivate ? "lock.fill" : "lock.open.fill")
+                        .font(.caption)
+                    Text(community.isPrivate ? "Private" : "Public")
+                        .font(.caption.bold())
+                }
+                .padding(.horizontal, 14)
+                .padding(.vertical, 8)
+                .background(community.isPrivate ? Color.orange.opacity(0.15) : Color.green.opacity(0.15))
+                .foregroundStyle(community.isPrivate ? .orange : .green)
+                .clipShape(Capsule())
+            }
+
+            Button {
+                showDeleteConfirm = true
+            } label: {
+                HStack(spacing: 5) {
+                    Image(systemName: "trash.fill")
+                        .font(.caption)
+                    Text("Delete")
+                        .font(.caption.bold())
+                }
+                .padding(.horizontal, 14)
+                .padding(.vertical, 8)
+                .background(Color.red.opacity(0.15))
+                .foregroundStyle(.red)
+                .clipShape(Capsule())
             }
         }
     }
@@ -210,6 +263,22 @@ struct CommunityDetailView: View {
         do {
             try await network.leaveCommunity(id: communityId)
             community = try await network.getCommunity(id: communityId)
+        } catch {}
+    }
+
+    private func togglePrivacy() async {
+        do {
+            try await network.toggleCommunityPrivacy(id: communityId)
+            community = try await network.getCommunity(id: communityId)
+        } catch {}
+    }
+
+    @Environment(\.dismiss) private var dismiss
+
+    private func deleteCommunity() async {
+        do {
+            try await network.deleteCommunity(id: communityId)
+            dismiss()
         } catch {}
     }
 }

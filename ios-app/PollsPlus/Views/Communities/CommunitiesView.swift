@@ -159,6 +159,10 @@ struct CommunityRow: View {
                 Label("Private", systemImage: "lock.fill")
                     .font(.caption2)
                     .foregroundStyle(.orange)
+            } else {
+                Label("Public", systemImage: "lock.open.fill")
+                    .font(.caption2)
+                    .foregroundStyle(.green)
             }
             if community.isMember == true {
                 Text("Joined")

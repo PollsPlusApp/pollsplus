@@ -273,6 +273,14 @@ class NetworkManager: ObservableObject {
         return result
     }
 
+    func deleteCommunity(id: Int) async throws {
+        try await requestNoResponse("DELETE", path: "/api/communities/\(id)")
+    }
+
+    func toggleCommunityPrivacy(id: Int) async throws {
+        let _: SuccessResponse = try await request("PUT", path: "/api/communities/\(id)/privacy")
+    }
+
     func leaveCommunity(id: Int) async throws {
         try await requestNoResponse("DELETE", path: "/api/communities/\(id)/leave")
     }
