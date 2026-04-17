@@ -1,6 +1,7 @@
 const express = require('express');
 const pool = require('../db/pool');
 const authenticate = require('../middleware/auth');
+const { optionalAuth } = authenticate;
 const { isValidCategory, parsePagination } = require('../utils/helpers');
 
 const router = express.Router();
@@ -49,7 +50,7 @@ router.post('/', authenticate, async (req, res) => {
 });
 
 // GET /api/communities/browse/:category — Browse communities by category
-router.get('/browse/:category', authenticate, async (req, res) => {
+router.get('/browse/:category', optionalAuth, async (req, res) => {
   try {
     const { category } = req.params;
     if (!isValidCategory(category)) {
@@ -78,7 +79,7 @@ router.get('/browse/:category', authenticate, async (req, res) => {
 });
 
 // GET /api/communities/:id — Get community info
-router.get('/:id', authenticate, async (req, res) => {
+router.get('/:id', optionalAuth, async (req, res) => {
   try {
     const result = await pool.query(
       `SELECT c.*,
@@ -105,7 +106,7 @@ router.get('/:id', authenticate, async (req, res) => {
 });
 
 // GET /api/communities/:id/debates — Get community debates (paginated, shows all — no seen filter)
-router.get('/:id/debates', authenticate, async (req, res) => {
+router.get('/:id/debates', optionalAuth, async (req, res) => {
   try {
     const { limit, offset } = parsePagination(req.query);
 

@@ -1,6 +1,7 @@
 const express = require('express');
 const pool = require('../db/pool');
 const authenticate = require('../middleware/auth');
+const { optionalAuth } = authenticate;
 const { isValidCategory } = require('../utils/helpers');
 
 const router = express.Router();
@@ -104,7 +105,7 @@ const DEBATE_FIELDS = `
 `;
 
 // GET /api/debates/:id — Get single debate
-router.get('/:id', authenticate, async (req, res) => {
+router.get('/:id', optionalAuth, async (req, res) => {
   try {
     const result = await pool.query(
       `${DEBATE_FIELDS} WHERE d.id = $1`,

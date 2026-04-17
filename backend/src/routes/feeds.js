@@ -1,6 +1,7 @@
 const express = require('express');
 const pool = require('../db/pool');
 const authenticate = require('../middleware/auth');
+const { optionalAuth } = authenticate;
 const { isValidCategory, parsePagination } = require('../utils/helpers');
 
 const router = express.Router();
@@ -42,7 +43,7 @@ const EXPIRED_FILTER = `
 `;
 
 // GET /api/feeds/following
-router.get('/following', authenticate, async (req, res) => {
+router.get('/following', optionalAuth, async (req, res) => {
   try {
     const { limit, offset } = parsePagination(req.query);
     const result = await pool.query(
@@ -61,7 +62,7 @@ router.get('/following', authenticate, async (req, res) => {
 });
 
 // GET /api/feeds/communities
-router.get('/communities', authenticate, async (req, res) => {
+router.get('/communities', optionalAuth, async (req, res) => {
   try {
     const { limit, offset } = parsePagination(req.query);
     const result = await pool.query(
@@ -82,7 +83,7 @@ router.get('/communities', authenticate, async (req, res) => {
 });
 
 // GET /api/feeds/category/:category — filters seen + expired
-router.get('/category/:category', authenticate, async (req, res) => {
+router.get('/category/:category', optionalAuth, async (req, res) => {
   try {
     const { category } = req.params;
     if (!isValidCategory(category)) {
@@ -107,7 +108,7 @@ router.get('/category/:category', authenticate, async (req, res) => {
 });
 
 // GET /api/feeds/popular — filters seen + expired
-router.get('/popular', authenticate, async (req, res) => {
+router.get('/popular', optionalAuth, async (req, res) => {
   try {
     const { limit, offset } = parsePagination(req.query);
     const result = await pool.query(

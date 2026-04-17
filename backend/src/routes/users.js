@@ -1,6 +1,7 @@
 const express = require('express');
 const pool = require('../db/pool');
 const authenticate = require('../middleware/auth');
+const { optionalAuth } = authenticate;
 const { parsePagination, isValidCategory } = require('../utils/helpers');
 
 const router = express.Router();
@@ -133,7 +134,7 @@ router.delete('/me', authenticate, async (req, res) => {
 });
 
 // GET /api/users/:id — Get user profile
-router.get('/:id', authenticate, async (req, res) => {
+router.get('/:id', optionalAuth, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -165,7 +166,7 @@ router.get('/:id', authenticate, async (req, res) => {
 });
 
 // GET /api/users/:id/debates — Get user's debates (paginated)
-router.get('/:id/debates', authenticate, async (req, res) => {
+router.get('/:id/debates', optionalAuth, async (req, res) => {
   try {
     const { id } = req.params;
     const { limit, offset } = parsePagination(req.query);
@@ -274,7 +275,7 @@ router.get('/:id/following', authenticate, async (req, res) => {
 });
 
 // GET /api/users/:id/followers — List user's followers
-router.get('/:id/followers', authenticate, async (req, res) => {
+router.get('/:id/followers', optionalAuth, async (req, res) => {
   try {
     const { limit, offset } = parsePagination(req.query);
     const result = await pool.query(

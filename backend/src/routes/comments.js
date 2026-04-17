@@ -1,12 +1,13 @@
 const express = require('express');
 const pool = require('../db/pool');
 const authenticate = require('../middleware/auth');
+const { optionalAuth } = authenticate;
 const { parsePagination } = require('../utils/helpers');
 
 const router = express.Router();
 
 // GET /api/debates/:debateId/comments — Get comments for a debate (threaded)
-router.get('/:debateId/comments', authenticate, async (req, res) => {
+router.get('/:debateId/comments', optionalAuth, async (req, res) => {
   try {
     const { limit, offset } = parsePagination(req.query);
     const debateId = parseInt(req.params.debateId);
@@ -46,7 +47,7 @@ router.get('/:debateId/comments', authenticate, async (req, res) => {
 });
 
 // GET /api/debates/:debateId/comments/:commentId/replies — Get replies to a comment
-router.get('/:debateId/comments/:commentId/replies', authenticate, async (req, res) => {
+router.get('/:debateId/comments/:commentId/replies', optionalAuth, async (req, res) => {
   try {
     const { limit, offset } = parsePagination(req.query);
 

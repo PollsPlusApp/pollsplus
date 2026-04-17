@@ -1,12 +1,13 @@
 const express = require('express');
 const pool = require('../db/pool');
 const authenticate = require('../middleware/auth');
+const { optionalAuth } = authenticate;
 const { parsePagination } = require('../utils/helpers');
 
 const router = express.Router();
 
 // GET /api/search?q=term — Search users, communities, and debates
-router.get('/', authenticate, async (req, res) => {
+router.get('/', optionalAuth, async (req, res) => {
   try {
     const { q } = req.query;
     if (!q || q.trim().length === 0) {
