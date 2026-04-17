@@ -187,7 +187,31 @@ router.post('/:id/vote', authenticate, async (req, res) => {
       [req.userId, req.params.id]
     );
 
-    res.json({ success: true });
+    // Update streak: increment if last vote was yesterday, reset to 1 if broken or first vote,
+    // no change if they already voted today
+    const streakResult = await pool.query(
+      `UPDATE users SET
+        current_streak = CASE
+          WHEN last_vote_date = CURRENT_DATE THEN current_streak
+          WHEN last_vote_date = CURRENT_DATE - 1 THEN current_streak + 1
+          ELSE 1
+        END,
+        longest_streak = GREATEST(longest_streak, CASE
+          WHEN last_vote_date = CURRENT_DATE THEN current_streak
+          WHEN last_vote_date = CURRENT_DATE - 1 THEN current_streak + 1
+          ELSE 1
+        END),
+        last_vote_date = CURRENT_DATE
+      WHERE id = $1
+      RETURNING current_streak, longest_streak`,
+      [req.userId]
+    );
+
+    res.json({
+      success: true,
+      current_streak: streakResult.rows[0].current_streak,
+      longest_streak: streakResult.rows[0].longest_streak,
+    });
   } catch (err) {
     if (err.code === '23505') {
       return res.status(409).json({ error: 'You have already voted on this debate' });

@@ -10,7 +10,6 @@
 		2B7C37F62F858D6C00AD1870 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 2B7C37F52F858D6C00AD1870 /* FirebaseAnalytics */; };
 		AA000001000001AA /* PollsPlusApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000001AA /* PollsPlusApp.swift */; };
 		AA000001000002AA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB000001000002AA /* Assets.xcassets */; };
-		AA000001000016AA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB000001000016AA /* GoogleService-Info.plist */; };
 		AA000001000003AA /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000003AA /* Models.swift */; };
 		AA000001000004AA /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000004AA /* NetworkManager.swift */; };
 		AA000001000005AA /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000005AA /* MainTabView.swift */; };
@@ -30,6 +29,7 @@
 		AA000001000013AA /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000013AA /* NotificationsView.swift */; };
 		AA000001000014AA /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000014AA /* SearchView.swift */; };
 		AA000001000015AA /* CommentSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000015AA /* CommentSection.swift */; };
+		AA000001000016AA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB000001000016AA /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -426,11 +426,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 8A2UKNPTHG;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "PollsPlus!";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -440,9 +444,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.timsmith.pollsplus;
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.timsmith.pollsplusapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = PollsPlus_AppStore2;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -457,11 +463,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 8A2UKNPTHG;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "PollsPlus!";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -471,9 +481,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.timsmith.pollsplus;
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.timsmith.pollsplusapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = PollsPlus_AppStore2;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;

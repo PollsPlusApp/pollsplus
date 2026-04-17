@@ -17,6 +17,8 @@ struct User: Codable, Identifiable {
     let followingCount: Int?
     let isFollowing: Bool?
     let isBlocked: Bool?
+    let currentStreak: Int?
+    let longestStreak: Int?
 
     enum CodingKeys: String, CodingKey {
         case id, username, email, category
@@ -25,6 +27,8 @@ struct User: Codable, Identifiable {
         case followingCount = "following_count"
         case isFollowing = "is_following"
         case isBlocked = "is_blocked"
+        case currentStreak = "current_streak"
+        case longestStreak = "longest_streak"
     }
 }
 

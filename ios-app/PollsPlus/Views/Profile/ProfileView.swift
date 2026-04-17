@@ -120,6 +120,24 @@ struct ProfileView: View {
                         .foregroundStyle(.blue)
                 }
             }
+            streakBadge(user)
+        }
+    }
+
+    @ViewBuilder
+    private func streakBadge(_ user: User) -> some View {
+        if let streak = user.currentStreak, streak > 0 {
+            HStack(spacing: 4) {
+                Image(systemName: "flame.fill")
+                    .font(.system(size: 10, weight: .bold))
+                Text("\(streak) day streak")
+                    .font(.system(size: 11, weight: .semibold))
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .background(Color.orange.opacity(0.15))
+            .foregroundStyle(.orange)
+            .clipShape(Capsule())
         }
     }
 

@@ -142,7 +142,13 @@ router.get('/:id', authenticate, async (req, res) => {
         (SELECT COUNT(*) FROM follows WHERE following_id = u.id)::int AS follower_count,
         (SELECT COUNT(*) FROM follows WHERE follower_id = u.id)::int AS following_count,
         EXISTS(SELECT 1 FROM follows WHERE follower_id = $2 AND following_id = u.id) AS is_following,
-        EXISTS(SELECT 1 FROM blocks WHERE blocker_id = $2 AND blocked_id = u.id) AS is_blocked
+        EXISTS(SELECT 1 FROM blocks WHERE blocker_id = $2 AND blocked_id = u.id) AS is_blocked,
+        CASE
+          WHEN u.last_vote_date IS NULL THEN 0
+          WHEN u.last_vote_date >= CURRENT_DATE - 1 THEN u.current_streak
+          ELSE 0
+        END AS current_streak,
+        u.longest_streak
       FROM users u WHERE u.id = $1`,
       [id, req.userId]
     );
