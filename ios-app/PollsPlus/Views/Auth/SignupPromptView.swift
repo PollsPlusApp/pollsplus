@@ -13,9 +13,9 @@ struct SignupPromptView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
+            Group {
                 if showLogin {
-                    LoginView()
+                    loginForm
                 } else {
                     registerPrompt
                 }
@@ -32,6 +32,17 @@ struct SignupPromptView: View {
                 }
             }
         }
+    }
+
+    private var loginForm: some View {
+        ScrollView {
+            VStack(spacing: 18) {
+                heroSection
+                LoginForm()
+            }
+            .padding()
+        }
+        .background(Color(.systemGroupedBackground))
     }
 
     private var registerPrompt: some View {
@@ -151,6 +162,63 @@ struct RegisterForm: View {
         Task {
             do {
                 _ = try await network.register(username: username, email: email, password: password, category: selectedCategory)
+                dismiss()
+            } catch {
+                self.error = error.localizedDescription
+            }
+            isLoading = false
+        }
+    }
+}
+
+/// Simple login form for the signup sheet (avoids nested NavigationStacks)
+struct LoginForm: View {
+    @EnvironmentObject var network: NetworkManager
+    @Environment(\.dismiss) var dismiss
+
+    @State private var email = ""
+    @State private var password = ""
+    @State private var error: String?
+    @State private var isLoading = false
+
+    var body: some View {
+        VStack(spacing: 14) {
+            StyledInput(icon: "envelope.fill", placeholder: "Email", text: $email)
+                .autocapitalization(.none)
+                .keyboardType(.emailAddress)
+            StyledSecureInput(icon: "lock.fill", placeholder: "Password", text: $password)
+
+            if let error = error {
+                Text(error)
+                    .font(.caption)
+                    .foregroundStyle(.red)
+            }
+
+            Button {
+                doLogin()
+            } label: {
+                HStack {
+                    if isLoading { ProgressView().tint(.white) }
+                    Text("Log In")
+                        .font(.headline)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 16)
+                .background(LinearGradient(colors: [.blue, .purple], startPoint: .leading, endPoint: .trailing))
+                .foregroundColor(.white)
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .shadow(color: .blue.opacity(0.35), radius: 10, y: 4)
+            }
+            .disabled(isLoading || email.isEmpty || password.isEmpty)
+        }
+    }
+
+    private func doLogin() {
+        isLoading = true
+        error = nil
+        Task {
+            do {
+                _ = try await network.login(email: email, password: password)
                 dismiss()
             } catch {
                 self.error = error.localizedDescription
