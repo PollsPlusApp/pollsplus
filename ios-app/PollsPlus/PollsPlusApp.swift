@@ -16,15 +16,9 @@ struct PollsPlusApp: App {
 
     var body: some Scene {
         WindowGroup {
-            Group {
-                if network.isLoggedIn {
-                    MainTabView()
-                } else {
-                    LoginView()
-                }
-            }
-            .environmentObject(network)
-            .animation(.easeInOut, value: network.isLoggedIn)
+            MainTabView()
+                .environmentObject(network)
+                .animation(.easeInOut, value: network.isLoggedIn)
         }
     }
 }

@@ -7,6 +7,7 @@ enum APIError: LocalizedError {
     case serverError(String)
     case unauthorized
     case decodingError(String)
+    case requiresSignup
 
     var errorDescription: String? {
         switch self {
@@ -15,7 +16,21 @@ enum APIError: LocalizedError {
         case .serverError(let msg): return msg
         case .unauthorized: return "Please log in again"
         case .decodingError(let msg): return "Data error: \(msg)"
+        case .requiresSignup: return "Sign up to do that"
         }
+    }
+}
+
+/// Shared flag to trigger the signup modal from anywhere in the app
+@MainActor
+class SignupPromptTrigger: ObservableObject {
+    static let shared = SignupPromptTrigger()
+    @Published var show = false
+    @Published var message: String? = nil
+
+    func prompt(_ msg: String? = nil) {
+        message = msg
+        show = true
     }
 }
 
@@ -42,6 +57,17 @@ class NetworkManager: ObservableObject {
     }
 
     var isLoggedIn: Bool { token != nil }
+    var isDemoMode: Bool { token == nil }
+
+    /// Called by write methods. If user isn't signed up, triggers the signup prompt
+    /// and throws so the caller stops.
+    private func requireAuth(_ msg: String? = nil) throws {
+        if isDemoMode {
+            Analytics.logEvent("demo_interaction", parameters: nil)
+            SignupPromptTrigger.shared.prompt(msg)
+            throw APIError.requiresSignup
+        }
+    }
 
     func logout() {
         token = nil
@@ -136,11 +162,13 @@ class NetworkManager: ObservableObject {
     }
 
     func follow(userId: Int) async throws {
+        try requireAuth("Sign up to follow people")
         try await requestNoResponse("POST", path: "/api/users/\(userId)/follow")
         Analytics.logEvent("follow_user", parameters: nil)
     }
 
     func unfollow(userId: Int) async throws {
+        try requireAuth()
         try await requestNoResponse("DELETE", path: "/api/users/\(userId)/follow")
     }
 
@@ -153,14 +181,17 @@ class NetworkManager: ObservableObject {
     }
 
     func block(userId: Int) async throws {
+        try requireAuth("Sign up to block users")
         try await requestNoResponse("POST", path: "/api/users/\(userId)/block")
     }
 
     func unblock(userId: Int) async throws {
+        try requireAuth()
         try await requestNoResponse("DELETE", path: "/api/users/\(userId)/block")
     }
 
     func reportUser(userId: Int, reason: String) async throws {
+        try requireAuth("Sign up to report")
         struct Body: Encodable { let reason: String }
         try await requestNoResponse("POST", path: "/api/users/\(userId)/report", body: Body(reason: reason))
     }
@@ -183,12 +214,14 @@ class NetworkManager: ObservableObject {
     }
 
     func updateCategory(_ category: String) async throws {
+        try requireAuth()
         struct Body: Encodable { let category: String }
         let _: SuccessResponse = try await request("PUT", path: "/api/users/me/category", body: Body(category: category))
     }
 
     // MARK: - Debates
     func createDebate(title: String?, category: String, options: [String], communityId: Int? = nil, expiresAt: String? = nil) async throws -> Debate {
+        try requireAuth("Sign up to post a debate")
         let result: Debate = try await request("POST", path: "/api/debates",
             body: CreateDebateRequest(title: title, category: category, options: options, communityId: communityId, expiresAt: expiresAt))
         Analytics.logEvent("create_debate", parameters: ["category": category, "option_count": options.count, "has_deadline": expiresAt != nil])
@@ -200,28 +233,34 @@ class NetworkManager: ObservableObject {
     }
 
     func deleteDebate(id: Int) async throws {
+        try requireAuth()
         try await requestNoResponse("DELETE", path: "/api/debates/\(id)")
     }
 
     func vote(debateId: Int, optionId: Int) async throws {
+        try requireAuth("Sign up to save your vote")
         struct Body: Encodable { let option_id: Int }
         try await requestNoResponse("POST", path: "/api/debates/\(debateId)/vote", body: Body(option_id: optionId))
         Analytics.logEvent("vote", parameters: nil)
     }
 
     func deleteVote(debateId: Int) async throws {
+        try requireAuth()
         try await requestNoResponse("DELETE", path: "/api/debates/\(debateId)/vote")
     }
 
     func pinDebate(debateId: Int) async throws {
+        try requireAuth("Sign up to pin debates")
         try await requestNoResponse("POST", path: "/api/debates/\(debateId)/pin")
     }
 
     func unpinDebate(debateId: Int) async throws {
+        try requireAuth()
         try await requestNoResponse("DELETE", path: "/api/debates/\(debateId)/pin")
     }
 
     func reportDebate(debateId: Int, reason: String) async throws {
+        try requireAuth("Sign up to report")
         struct Body: Encodable { let reason: String }
         try await requestNoResponse("POST", path: "/api/debates/\(debateId)/report", body: Body(reason: reason))
     }
@@ -252,6 +291,7 @@ class NetworkManager: ObservableObject {
 
     // MARK: - Communities
     func createCommunity(name: String, category: String, isPrivate: Bool) async throws -> Community {
+        try requireAuth("Sign up to create a community")
         struct Body: Encodable { let name, category: String; let is_private: Bool }
         let result: Community = try await request("POST", path: "/api/communities",
             body: Body(name: name, category: category, is_private: isPrivate))
@@ -268,6 +308,7 @@ class NetworkManager: ObservableObject {
     }
 
     func joinCommunity(id: Int) async throws -> JoinResponse {
+        try requireAuth("Sign up to join communities")
         let result: JoinResponse = try await request("POST", path: "/api/communities/\(id)/join")
         Analytics.logEvent("join_community", parameters: nil)
         return result
@@ -331,6 +372,7 @@ class NetworkManager: ObservableObject {
     }
 
     func postComment(debateId: Int, content: String, parentId: Int? = nil) async throws -> Comment {
+        try requireAuth("Sign up to comment")
         struct Body: Encodable { let content: String; let parent_id: Int? }
         let result: Comment = try await request("POST", path: "/api/debates/\(debateId)/comments",
             body: Body(content: content, parent_id: parentId))
@@ -339,6 +381,7 @@ class NetworkManager: ObservableObject {
     }
 
     func deleteComment(debateId: Int, commentId: Int) async throws {
+        try requireAuth()
         try await requestNoResponse("DELETE", path: "/api/debates/\(debateId)/comments/\(commentId)")
     }
 

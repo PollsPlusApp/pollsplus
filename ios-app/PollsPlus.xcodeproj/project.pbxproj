@@ -15,6 +15,7 @@
 		AA000001000005AA /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000005AA /* MainTabView.swift */; };
 		AA000001000006AA /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000006AA /* LoginView.swift */; };
 		AA000001000007AA /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000007AA /* RegisterView.swift */; };
+		AA000001000017AA /* SignupPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000017AA /* SignupPromptView.swift */; };
 		AA000001000008AA /* CategoryIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000008AA /* CategoryIcon.swift */; };
 		AA000001000009AA /* DebateCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000009AA /* DebateCard.swift */; };
 		AA00000100000AAA /* FeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000100000AAA /* FeedView.swift */; };
@@ -41,6 +42,7 @@
 		BB000001000005AA /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		BB000001000006AA /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		BB000001000007AA /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
+		BB000001000017AA /* SignupPromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupPromptView.swift; sourceTree = "<group>"; };
 		BB000001000008AA /* CategoryIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryIcon.swift; sourceTree = "<group>"; };
 		BB000001000009AA /* DebateCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebateCard.swift; sourceTree = "<group>"; };
 		BB00000100000AAA /* FeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedView.swift; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 			children = (
 				BB000001000006AA /* LoginView.swift */,
 				BB000001000007AA /* RegisterView.swift */,
+				BB000001000017AA /* SignupPromptView.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -282,6 +285,7 @@
 				AA000001000005AA /* MainTabView.swift in Sources */,
 				AA000001000006AA /* LoginView.swift in Sources */,
 				AA000001000007AA /* RegisterView.swift in Sources */,
+				AA000001000017AA /* SignupPromptView.swift in Sources */,
 				AA000001000008AA /* CategoryIcon.swift in Sources */,
 				AA000001000009AA /* DebateCard.swift in Sources */,
 				AA00000100000AAA /* FeedView.swift in Sources */,
