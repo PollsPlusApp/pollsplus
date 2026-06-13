@@ -91,22 +91,22 @@ struct DebateListView: View {
         DebateCard(
             debate: debate,
             onVote: { optionId in
-                Task { await voteOn(debate: debate, optionId: optionId, index: index) }
+                Task { await voteOn(debate: debate, optionId: optionId) }
             },
             onDeleteVote: {
-                Task { await deleteVoteOn(debate: debate, index: index) }
+                Task { await deleteVoteOn(debate: debate) }
             },
             onTapAuthor: { userId in
                 navigateToProfile = userId
             },
             onDelete: (showDeleteForOwnDebates || debate.authorId == network.currentUserId) ? {
-                Task { await deleteDebate(debate: debate, index: index) }
+                Task { await deleteDebate(debate: debate) }
             } : nil,
             onPin: {
-                Task { await pinDebate(debate: debate, index: index) }
+                Task { await pinDebate(debate: debate) }
             },
             onUnpin: {
-                Task { await unpinDebate(debate: debate, index: index) }
+                Task { await unpinDebate(debate: debate) }
             },
             onTapCommunity: { communityId in
                 navigateToCommunity = communityId
@@ -173,48 +173,56 @@ struct DebateListView: View {
 
     // MARK: - Voting
 
-    private func voteOn(debate: Debate, optionId: Int, index: Int) async {
+    /// Replace a debate in the list by id (indices can shift after deletes, so
+    /// never trust a captured index — look the row up at mutation time).
+    private func replaceDebate(_ updated: Debate) {
+        if let idx = debates.firstIndex(where: { $0.id == updated.id }) {
+            debates[idx] = updated
+        }
+    }
+
+    private func voteOn(debate: Debate, optionId: Int) async {
         do {
             try await network.vote(debateId: debate.id, optionId: optionId)
             let updated = try await network.getDebate(id: debate.id)
-            if index < debates.count {
-                debates[index] = updated
-            }
+            replaceDebate(updated)
         } catch {}
     }
 
-    private func deleteVoteOn(debate: Debate, index: Int) async {
+    private func deleteVoteOn(debate: Debate) async {
         do {
             try await network.deleteVote(debateId: debate.id)
-            let updated = try await network.getDebate(id: debate.id)
-            if index < debates.count {
-                debates[index] = updated
+            // In the "Voted" feed the debate no longer belongs once the vote is
+            // removed, so drop it rather than showing a stale, vote-less row.
+            if case .votedDebates = feedType {
+                debates.removeAll { $0.id == debate.id }
+            } else {
+                let updated = try await network.getDebate(id: debate.id)
+                replaceDebate(updated)
             }
         } catch {}
     }
 
-    private func pinDebate(debate: Debate, index: Int) async {
+    private func pinDebate(debate: Debate) async {
         do {
             try await network.pinDebate(debateId: debate.id)
             let updated = try await network.getDebate(id: debate.id)
-            if index < debates.count { debates[index] = updated }
+            replaceDebate(updated)
         } catch {}
     }
 
-    private func unpinDebate(debate: Debate, index: Int) async {
+    private func unpinDebate(debate: Debate) async {
         do {
             try await network.unpinDebate(debateId: debate.id)
             let updated = try await network.getDebate(id: debate.id)
-            if index < debates.count { debates[index] = updated }
+            replaceDebate(updated)
         } catch {}
     }
 
-    private func deleteDebate(debate: Debate, index: Int) async {
+    private func deleteDebate(debate: Debate) async {
         do {
             try await network.deleteDebate(id: debate.id)
-            if index < debates.count {
-                debates.remove(at: index)
-            }
+            debates.removeAll { $0.id == debate.id }
         } catch {}
     }
 

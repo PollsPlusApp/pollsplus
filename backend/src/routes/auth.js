@@ -36,7 +36,10 @@ router.post('/register', async (req, res) => {
     );
 
     const user = result.rows[0];
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+    // No expiry — sessions are permanent so users never get silently logged out
+    // and forced to re-sign-in. (To revoke everything in an emergency, rotate
+    // JWT_SECRET, which invalidates all outstanding tokens.)
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
 
     res.status(201).json({ user, token });
   } catch (err) {
@@ -69,7 +72,10 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+    // No expiry — sessions are permanent so users never get silently logged out
+    // and forced to re-sign-in. (To revoke everything in an emergency, rotate
+    // JWT_SECRET, which invalidates all outstanding tokens.)
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
 
     res.json({
       user: {

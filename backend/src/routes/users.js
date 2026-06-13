@@ -223,16 +223,19 @@ router.post('/:id/follow', authenticate, async (req, res) => {
       return res.status(403).json({ error: 'Cannot follow this user' });
     }
 
-    await pool.query(
-      'INSERT INTO follows (follower_id, following_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
+    const inserted = await pool.query(
+      'INSERT INTO follows (follower_id, following_id) VALUES ($1, $2) ON CONFLICT DO NOTHING RETURNING id',
       [req.userId, targetId]
     );
 
-    // Create notification
-    await pool.query(
-      `INSERT INTO notifications (user_id, type, from_user_id) VALUES ($1, 'new_follower', $2)`,
-      [targetId, req.userId]
-    );
+    // Only notify on a genuinely new follow — otherwise re-hitting this endpoint
+    // would spam the target with duplicate "new_follower" notifications.
+    if (inserted.rows.length > 0) {
+      await pool.query(
+        `INSERT INTO notifications (user_id, type, from_user_id) VALUES ($1, 'new_follower', $2)`,
+        [targetId, req.userId]
+      );
+    }
 
     res.json({ success: true });
   } catch (err) {

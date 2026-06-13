@@ -108,7 +108,27 @@ router.get('/:id', optionalAuth, async (req, res) => {
 // GET /api/communities/:id/debates — Get community debates (paginated, shows all — no seen filter)
 router.get('/:id/debates', optionalAuth, async (req, res) => {
   try {
+    const communityId = parseInt(req.params.id);
+    if (!Number.isInteger(communityId)) {
+      return res.status(404).json({ error: 'Community not found' });
+    }
     const { limit, offset } = parsePagination(req.query);
+
+    // Private communities are members-only — don't leak their debates to
+    // non-members (or to guests in demo mode, where req.userId === 0).
+    const community = await pool.query('SELECT is_private FROM communities WHERE id = $1', [communityId]);
+    if (community.rows.length === 0) {
+      return res.status(404).json({ error: 'Community not found' });
+    }
+    if (community.rows[0].is_private) {
+      const member = await pool.query(
+        "SELECT 1 FROM community_members WHERE community_id = $1 AND user_id = $2 AND status = 'member'",
+        [communityId, req.userId]
+      );
+      if (member.rows.length === 0) {
+        return res.status(403).json({ error: 'Must be a member to view this community' });
+      }
+    }
 
     const result = await pool.query(
       `SELECT d.id, d.title, d.category, d.community_id, d.created_at,
@@ -129,7 +149,7 @@ router.get('/:id/debates', optionalAuth, async (req, res) => {
         )
       ORDER BY d.created_at DESC
       LIMIT $2 OFFSET $3`,
-      [req.userId, limit, offset, req.params.id]
+      [req.userId, limit, offset, communityId]
     );
 
     res.json({ debates: result.rows });

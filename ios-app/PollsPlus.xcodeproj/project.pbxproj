@@ -15,7 +15,6 @@
 		AA000001000005AA /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000005AA /* MainTabView.swift */; };
 		AA000001000006AA /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000006AA /* LoginView.swift */; };
 		AA000001000007AA /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000007AA /* RegisterView.swift */; };
-		AA000001000017AA /* SignupPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000017AA /* SignupPromptView.swift */; };
 		AA000001000008AA /* CategoryIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000008AA /* CategoryIcon.swift */; };
 		AA000001000009AA /* DebateCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000009AA /* DebateCard.swift */; };
 		AA00000100000AAA /* FeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000100000AAA /* FeedView.swift */; };
@@ -31,6 +30,7 @@
 		AA000001000014AA /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000014AA /* SearchView.swift */; };
 		AA000001000015AA /* CommentSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000015AA /* CommentSection.swift */; };
 		AA000001000016AA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB000001000016AA /* GoogleService-Info.plist */; };
+		AA000001000017AA /* SignupPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001000017AA /* SignupPromptView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,7 +42,6 @@
 		BB000001000005AA /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		BB000001000006AA /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		BB000001000007AA /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
-		BB000001000017AA /* SignupPromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupPromptView.swift; sourceTree = "<group>"; };
 		BB000001000008AA /* CategoryIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryIcon.swift; sourceTree = "<group>"; };
 		BB000001000009AA /* DebateCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebateCard.swift; sourceTree = "<group>"; };
 		BB00000100000AAA /* FeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedView.swift; sourceTree = "<group>"; };
@@ -58,6 +57,7 @@
 		BB000001000014AA /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		BB000001000015AA /* CommentSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentSection.swift; sourceTree = "<group>"; };
 		BB000001000016AA /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		BB000001000017AA /* SignupPromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupPromptView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -433,7 +433,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 8A2UKNPTHG;
 				ENABLE_PREVIEWS = YES;
@@ -470,7 +470,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 8A2UKNPTHG;
 				ENABLE_PREVIEWS = YES;

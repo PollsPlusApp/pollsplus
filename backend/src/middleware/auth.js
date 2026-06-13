@@ -8,7 +8,10 @@ function authenticate(req, res, next) {
 
   try {
     const token = header.slice(7);
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    // ignoreExpiration: sessions are timeless. Tokens issued before this change
+    // (30-day expiry) keep working past their old exp, so existing users are
+    // never forced to re-sign-in. A bad signature still throws → 401.
+    const payload = jwt.verify(token, process.env.JWT_SECRET, { ignoreExpiration: true });
     req.userId = payload.userId;
     next();
   } catch {
@@ -30,7 +33,7 @@ function optionalAuth(req, res, next) {
 
   try {
     const token = header.slice(7);
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const payload = jwt.verify(token, process.env.JWT_SECRET, { ignoreExpiration: true });
     req.userId = payload.userId;
     next();
   } catch {

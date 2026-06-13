@@ -107,6 +107,14 @@ class NetworkManager: ObservableObject {
         }
 
         if httpResponse.statusCode == 401 {
+            // If we sent a token, it's expired/invalid. Clear the dead session and
+            // surface a re-login prompt instead of leaving the app in a broken
+            // "logged in but every action silently fails" state. (A 401 with no
+            // token is a failed login/register — the caller handles that.)
+            if token != nil {
+                logout()
+                SignupPromptTrigger.shared.prompt("Your session expired — please log in again")
+            }
             throw APIError.unauthorized
         }
 
@@ -315,14 +323,17 @@ class NetworkManager: ObservableObject {
     }
 
     func deleteCommunity(id: Int) async throws {
+        try requireAuth()
         try await requestNoResponse("DELETE", path: "/api/communities/\(id)")
     }
 
     func toggleCommunityPrivacy(id: Int) async throws {
+        try requireAuth()
         let _: SuccessResponse = try await request("PUT", path: "/api/communities/\(id)/privacy")
     }
 
     func leaveCommunity(id: Int) async throws {
+        try requireAuth()
         try await requestNoResponse("DELETE", path: "/api/communities/\(id)/leave")
     }
 
@@ -335,14 +346,17 @@ class NetworkManager: ObservableObject {
     }
 
     func approveRequest(communityId: Int, userId: Int) async throws {
+        try requireAuth()
         try await requestNoResponse("POST", path: "/api/communities/\(communityId)/approve/\(userId)")
     }
 
     func removeMember(communityId: Int, userId: Int) async throws {
+        try requireAuth()
         try await requestNoResponse("DELETE", path: "/api/communities/\(communityId)/members/\(userId)")
     }
 
     func deleteCommunityDebate(communityId: Int, debateId: Int) async throws {
+        try requireAuth()
         try await requestNoResponse("DELETE", path: "/api/communities/\(communityId)/debates/\(debateId)")
     }
 
