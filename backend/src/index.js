@@ -11,6 +11,7 @@ const communityRoutes = require('./routes/communities');
 const notificationRoutes = require('./routes/notifications');
 const searchRoutes = require('./routes/search');
 const commentRoutes = require('./routes/comments');
+const statsRoutes = require('./routes/stats');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -34,6 +35,9 @@ app.use('/api/communities', communityRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/debates', commentRoutes);
+
+// Public live stats: /stats (page) + /api/stats (json) — shareable proof page
+app.use('/', statsRoutes);
 
 // 404 handler
 app.use((req, res) => {
